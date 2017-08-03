@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html style="display: none;" lang="zh">
+    <head>
+    <meta charset="utf-8">
+    <!--
+        © Material Theme
+        https://github.com/viosey/hexo-theme-material
+        Version: 1.4.0 -->
+    <script>window.materialVersion = "1.4.0"</script>
+
+    <!-- Title -->
+    
+    <title>
+        
+            Retrofit2 文件上传和 Retrofit 下载文件并使用RxJava更新进度 | 
+        
+        ScWen7&#39;s Blog
+    </title>
+
+    <!-- dns prefetch -->
+    <meta http-equiv="x-dns-prefetch-control" content="on">
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <!-- Meta & Info -->
+    <meta http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="theme-color" content="#0097A7">
+    <meta name="author" content="ScWen7">
+    <meta name="description" itemprop="description" content="ScWen7的个人博客 包含Android Java">
+    <meta name="keywords" content="Android Java">
+
+    <!-- Site Verification -->
+    
+    
+
+    <!-- Favicons -->
+    <link rel="icon shortcut" type="image/ico" href="/img/favicon.png">
+    <link rel="icon" sizes="192x192" href="/img/favicon.png">
+    <link rel="apple-touch-icon" href="/img/favicon.png">
+
+    <!--iOS -->
+    <meta name="apple-mobile-web-app-title" content="Title">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="480">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="ScWen7&#39;s Blog">
+
+    <!-- The Open Graph protocol -->
+    <meta property="og:url" content="http://yoursite.com">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="Retrofit2 文件上传和 Retrofit 下载文件并使用RxJava更新进度 | ScWen7&#39;s Blog">
+    <meta property="og:image" content="/img/favicon.png" />
+    <meta property="og:description" content="ScWen7的个人博客 包含Android Java">
+    
+
+    
+        <meta property="article:published_time" content="8月 03, 2017" />
+        <meta property="article:modified_time" content="8月 03, 2017" />
+    
+
+    <!-- The Twitter Card protocol -->
+    <meta name="twitter:title" content="Retrofit2 文件上传和 Retrofit 下载文件并使用RxJava更新进度 | ScWen7&#39;s Blog">
+    <meta name="twitter:description" content="ScWen7的个人博客 包含Android Java">
+    <meta name="twitter:image" content="/img/favicon.png">
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="http://yoursite.com" />
+
+    <!-- Add canonical link for SEO -->
+    
+        <link rel="canonical" href="http://yoursite.com/2017/08/03/2017-07-03-Retrofit上传下载/index.html" />
+    
+
+    <!-- Structured-data for SEO -->
+    
+        
+
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "ScWen7&#39;s Blog",
+        "logo": "/img/favicon.png"
+    },
+    "author": {
+        "@type": "Person",
+        "name": "ScWen7",
+        "image": {
+            "@type": "ImageObject",
+            "url": "/img/favicon.png"
+        },
+        "description": "加油努力每一天!"
+    },
+    "headline": "Retrofit2 文件上传和 Retrofit 下载文件并使用RxJava更新进度",
+    "url": "http://yoursite.com/2017/08/03/2017-07-03-Retrofit上传下载/index.html",
+    "datePublished": "8月 03, 2017",
+    "dateModified": "8月 03, 2017",
+    "description": "ScWen7的个人博客 包含Android Java",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "http://yoursite.com"
+    }
+}
+</script>
+
+
+    
+
+    <!--[if lte IE 9]>
+        <link rel="stylesheet" href="/css/ie-blocker.css">
+
+        
+            <script src="/js/ie-blocker.zhCN.js"></script>
+        
+    <![endif]-->
+
+    <!-- Import lsloader -->
+    <script>(function(){window.lsloader={jsRunSequence:[],jsnamemap:{},cssnamemap:{}};lsloader.removeLS=function(key){try{localStorage.removeItem(key)}catch(e){}};lsloader.setLS=function(key,val){try{localStorage.setItem(key,val)}catch(e){}};lsloader.getLS=function(key){var val="";try{val=localStorage.getItem(key)}catch(e){val=""}return val};versionString="/*"+materialVersion+"*/";lsloader.clean=function(){try{var keys=[];for(var i=0;i<localStorage.length;i++){keys.push(localStorage.key(i))}keys.forEach(function(key){var data=lsloader.getLS(key);if(data&&data.indexOf(versionString)===-1){lsloader.removeLS(key)}})}catch(e){}};lsloader.clean();lsloader.load=function(jsname,jspath,cssonload){cssonload=cssonload||function(){};var code;code=this.getLS(jsname);if(code&&code.indexOf(versionString)===-1){this.removeLS(jsname);this.requestResource(jsname,jspath,cssonload);return}if(code){var versionNumber=code.split(versionString)[0];if(versionNumber!=jspath){console.log("reload:"+jspath);this.removeLS(jsname);this.requestResource(jsname,jspath,cssonload);return}code=code.split(versionString)[1];if(/\.js?.+$/.test(versionNumber)){this.jsRunSequence.push({name:jsname,code:code});this.runjs(jspath,jsname,code)}else{document.getElementById(jsname).appendChild(document.createTextNode(code));cssonload()}}else{this.requestResource(jsname,jspath,cssonload)}};lsloader.requestResource=function(name,path,cssonload){var that=this;if(/\.js?.+$/.test(path)){this.iojs(path,name,function(path,name,code){that.setLS(name,path+versionString+code);that.runjs(path,name,code)})}else if(/\.css?.+$/.test(path)){this.iocss(path,name,function(code){document.getElementById(name).appendChild(document.createTextNode(code));that.setLS(name,path+versionString+code)},cssonload)}};lsloader.iojs=function(path,jsname,callback){var that=this;that.jsRunSequence.push({name:jsname,code:""});try{var xhr=new XMLHttpRequest;xhr.open("get",path,true);xhr.onreadystatechange=function(){if(xhr.readyState==4){if(xhr.status>=200&&xhr.status<300||xhr.status==304){if(xhr.response!=""){callback(path,jsname,xhr.response);return}}that.jsfallback(path,jsname)}};xhr.send(null)}catch(e){that.jsfallback(path,jsname)}};lsloader.iocss=function(path,jsname,callback,cssonload){var that=this;try{var xhr=new XMLHttpRequest;xhr.open("get",path,true);xhr.onreadystatechange=function(){if(xhr.readyState==4){if(xhr.status>=200&&xhr.status<300||xhr.status==304){if(xhr.response!=""){callback(xhr.response);cssonload();return}}that.cssfallback(path,jsname,cssonload)}};xhr.send(null)}catch(e){that.cssfallback(path,jsname,cssonload)}};lsloader.iofonts=function(path,jsname,callback,cssonload){var that=this;try{var xhr=new XMLHttpRequest;xhr.open("get",path,true);xhr.onreadystatechange=function(){if(xhr.readyState==4){if(xhr.status>=200&&xhr.status<300||xhr.status==304){if(xhr.response!=""){callback(xhr.response);cssonload();return}}that.cssfallback(path,jsname,cssonload)}};xhr.send(null)}catch(e){that.cssfallback(path,jsname,cssonload)}};lsloader.runjs=function(path,name,code){if(!!name&&!!code){for(var k in this.jsRunSequence){if(this.jsRunSequence[k].name==name){this.jsRunSequence[k].code=code}}}if(!!this.jsRunSequence[0]&&!!this.jsRunSequence[0].code&&this.jsRunSequence[0].status!="failed"){var script=document.createElement("script");script.appendChild(document.createTextNode(this.jsRunSequence[0].code));script.type="text/javascript";document.getElementsByTagName("head")[0].appendChild(script);this.jsRunSequence.shift();if(this.jsRunSequence.length>0){this.runjs()}}else if(!!this.jsRunSequence[0]&&this.jsRunSequence[0].status=="failed"){var that=this;var script=document.createElement("script");script.src=this.jsRunSequence[0].path;script.type="text/javascript";this.jsRunSequence[0].status="loading";script.onload=function(){that.jsRunSequence.shift();if(that.jsRunSequence.length>0){that.runjs()}};document.body.appendChild(script)}};lsloader.tagLoad=function(path,name){this.jsRunSequence.push({name:name,code:"",path:path,status:"failed"});this.runjs()};lsloader.jsfallback=function(path,name){if(!!this.jsnamemap[name]){return}else{this.jsnamemap[name]=name}for(var k in this.jsRunSequence){if(this.jsRunSequence[k].name==name){this.jsRunSequence[k].code="";this.jsRunSequence[k].status="failed";this.jsRunSequence[k].path=path}}this.runjs()};lsloader.cssfallback=function(path,name,cssonload){if(!!this.cssnamemap[name]){return}else{this.cssnamemap[name]=1}var link=document.createElement("link");link.type="text/css";link.href=path;link.rel="stylesheet";link.onload=link.onerror=cssonload;var root=document.getElementsByTagName("script")[0];root.parentNode.insertBefore(link,root)};lsloader.runInlineScript=function(scriptId,codeId){var code=document.getElementById(codeId).innerText;this.jsRunSequence.push({name:scriptId,code:code});this.runjs()};lsloader.loadCombo=function(jslist){var updateList="";var requestingModules={};for(var k in jslist){var LS=this.getLS(jslist[k].name);if(!!LS){var version=LS.split(versionString)[0];var code=LS.split(versionString)[1]}else{var version=""}if(version==jslist[k].path){this.jsRunSequence.push({name:jslist[k].name,code:code,path:jslist[k].path})}else{this.jsRunSequence.push({name:jslist[k].name,code:null,path:jslist[k].path,status:"comboloading"});requestingModules[jslist[k].name]=true;updateList+=(updateList==""?"":";")+jslist[k].path}}var that=this;if(!!updateList){var xhr=new XMLHttpRequest;xhr.open("get",combo+updateList,true);xhr.onreadystatechange=function(){if(xhr.readyState==4){if(xhr.status>=200&&xhr.status<300||xhr.status==304){if(xhr.response!=""){that.runCombo(xhr.response,requestingModules);return}}else{for(var i in that.jsRunSequence){if(requestingModules[that.jsRunSequence[i].name]){that.jsRunSequence[i].status="failed"}}that.runjs()}}};xhr.send(null)}this.runjs()};lsloader.runCombo=function(comboCode,requestingModules){comboCode=comboCode.split("/*combojs*/");comboCode.shift();for(var k in this.jsRunSequence){if(!!requestingModules[this.jsRunSequence[k].name]&&!!comboCode[0]){this.jsRunSequence[k].status="comboJS";this.jsRunSequence[k].code=comboCode[0];this.setLS(this.jsRunSequence[k].name,this.jsRunSequence[k].path+versionString+comboCode[0]);comboCode.shift()}}this.runjs()}})();</script>
+
+    <!-- Import CSS & jQuery -->
+    
+        <style id="css/material.min.css"></style><script>if(typeof window.lsLoadCSSMaxNums === "undefined")window.lsLoadCSSMaxNums = 0;window.lsLoadCSSMaxNums++;lsloader.load("css/material.min.css","/css/material.min.css?fJTiM/K1J3dWIruo3pxtAw==",function(){if(typeof window.lsLoadCSSNums === "undefined")window.lsLoadCSSNums = 0;window.lsLoadCSSNums++;if(window.lsLoadCSSNums == window.lsLoadCSSMaxNums)document.documentElement.style.display="";})</script>
+        <style id="css/style.min.css"></style><script>if(typeof window.lsLoadCSSMaxNums === "undefined")window.lsLoadCSSMaxNums = 0;window.lsLoadCSSMaxNums++;lsloader.load("css/style.min.css","/css/style.min.css?oCSEO3ST+aEypEwttTDI9g==",function(){if(typeof window.lsLoadCSSNums === "undefined")window.lsLoadCSSNums = 0;window.lsLoadCSSNums++;if(window.lsLoadCSSNums == window.lsLoadCSSMaxNums)document.documentElement.style.display="";})</script>
+        
+        
+            <style>
+    
+    
+    
+    
+    
+    
+    
+    .footer-sns-github {
+        background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgY2xhc3M9Imljb24iIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiPjxwYXRoIGQ9Ik0xMzguNCA3OGMtNi40IDEuNC0yNi40IDE0LjItMzYgMjIuOC04IDcuMi0yMiAyOS44LTI0LjQgMzkuMi0xLjYgNi40LTIgMTEzLjItMS42IDM2OCAuNiAyOTkuNCAxIDM1OS44IDMuNCAzNjQgMTEgMjAuMiAyMS42IDMyLjQgMzcuMiA0MyAxNS42IDEwLjYgMTcuMiAxMS4yIDM0LjIgMTMuMiAxMC42IDEuMiA2My40IDEuNiAxMjcuNiAxLjRsMTA5LjYtLjYgNi02LjggNi4yLTYuOC0xLjItMjUuMmMtLjgtMTUuOC0uMi0zMy40IDEuNC00Ny4yIDMtMjUuNCAxLjQtMzYuMi02LTQzLjItNS00LjYtNi4yLTQuOC0zMC42LTQuMi0yNy42LjgtMjQgMS42LTY4LjgtMTYtOC42LTMuNC0yMi42LTE4LTI4LjQtMjkuOC0xMS40LTIyLjgtMjctNDUtMzkuMi01NS42LTE0LTEyLjItMTkuOC0yMC44LTE5LjgtMjguNiAwLTExLjYgMTMuNi0xMi42IDMzLjItMi40IDE2LjYgOC44IDIwLjggMTIuNCA0MC44IDM2LjIgMjQuMiAyOC42IDMxIDMzLjYgNTQgMzkuNiAxNS4yIDQgNDIuMiAzIDUxLjQtMS44IDktNC42IDE4LTE1LjIgMjQuNC0yOS4yIDExLjQtMjQuMiA3LjQtMzEuMi0yMC42LTM2LjgtOS44LTItMjkuMi04LTQzLjQtMTMuNC00MC40LTE1LjgtNjQuNi0zNy40LTg1LjQtNzYuMi0xMS42LTIxLjgtMTUuNC0zMy0xOC4yLTUzLjYtNC4yLTMyLjItNC44LTYwLjItMS40LTg0IDMuNC0yMy44IDYuOC0zMi44IDIwLjItNTQgNC02IDguOC0xNS42IDExLTIxLjQgMy44LTEwIDMuOC0xMS42IDEtMzAtNS4yLTM0LjItMy4yLTUyLjQgNy42LTcwLjIgNy4yLTEyLjIgMTUtMTcuMiAyNC4yLTE1LjggMTIuOCAyLjIgNTIgMTcuNCA2Ni44IDI2LjIgMjYgMTUgMjkgMTUuNCA4Mi40IDcuMiAyNC42LTMuOCAzMy44LTQuMiA2MC0zLjIgMTcgLjYgNDEuNCAzIDU0IDUuMiAzOC40IDYuNiA0OS42IDUuMiA3My0xMCA2LjYtNC4yIDE3LjQtOS40IDI0LTExLjYgNi42LTIuMiAxNi01LjggMjEtOC4yIDEzLTYgMjgtNS42IDM1LjYuOCAxMi40IDEwLjQgMTguNiA0MS40IDE0LjQgNzEuNi00LjQgMzAuNi0zIDM5LjQgOC40IDUzLjggMy40IDQuNCAxMS4yIDE5LjIgMTcuNCAzMy4yTDc3NSA0NDN2NzhsLTEwIDI4Yy0xNS4yIDQzLjItMzYuOCA3My4yLTY2LjIgOTIuOC0xMy40IDguOC01NyAyNS40LTc2LjggMjktMjguMiA1LjItMzMuMiAxMi42LTIyIDMyLjIgMTEuMiAxOS40IDEyLjQgMzIuOCAxMS42IDEyOS42bC0uNiA4NS44IDUuNCA0LjZjMy42IDMgOS4yIDUuMiAxNiA2IDUuOC44IDYwLjIgMSAxMjAuNi42IDEwOC40LS42IDExMC4yLS42IDExOS01IDI0LTExLjYgNDAtMjcuNCA1MS42LTUwLjZsNS40LTExIC42LTM0N2MuNC0yMjMtLjItMzUzLjQtMS40LTM2NS0yLTE3LTIuNi0xOC42LTEzLTM0LTEwLjYtMTUuNC0yMi44LTI2LjItNDMuMi0zNy4yLTQuMi0yLjQtNjQuNi0yLjgtMzY2LTMuMi0xOTguNiAwLTM2NCAuNC0zNjcuNiAxLjR6Ii8+PC9zdmc+);
+    }
+    
+    
+    
+    
+    
+</style>
+
+        
+        <!-- Config CSS -->
+
+<!-- Other Styles -->
+<style>
+  body, html {
+    font-family: Roboto, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  }
+
+  a {
+    color: #00838F;
+  }
+
+  .mdl-card__media,
+  #search-label,
+  #search-form-label:after,
+  #scheme-Paradox .hot_tags-count,
+  #scheme-Paradox .sidebar_archives-count,
+  #scheme-Paradox .sidebar-colored .sidebar-header,
+  #scheme-Paradox .sidebar-colored .sidebar-badge{
+    background-color: #0097A7 !important;
+  }
+
+  /* Sidebar User Drop Down Menu Text Color */
+  #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:hover,
+  #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:focus {
+    color: #0097A7 !important;
+  }
+
+  #post_entry-right-info,
+  .sidebar-colored .sidebar-nav li:hover > a,
+  .sidebar-colored .sidebar-nav li:hover > a i,
+  .sidebar-colored .sidebar-nav li > a:hover,
+  .sidebar-colored .sidebar-nav li > a:hover i,
+  .sidebar-colored .sidebar-nav li > a:focus i,
+  .sidebar-colored .sidebar-nav > .open > a,
+  .sidebar-colored .sidebar-nav > .open > a:hover,
+  .sidebar-colored .sidebar-nav > .open > a:focus,
+  #ds-reset #ds-ctx .ds-ctx-entry .ds-ctx-head a {
+    color: #0097A7 !important;
+  }
+
+  .toTop {
+    background: #757575 !important;
+  }
+
+  .material-layout .material-post>.material-nav,
+  .material-layout .material-index>.material-nav,
+  .material-nav a {
+    color: #757575;
+  }
+
+  #scheme-Paradox .MD-burger-layer {
+    background-color: #757575;
+  }
+
+  #scheme-Paradox #post-toc-trigger-btn {
+    color: #757575;
+  }
+
+  .post-toc a:hover {
+    color: #00838F;
+    text-decoration: underline;
+  }
+
+</style>
+
+
+<!-- Theme Background Related-->
+
+    <style>
+      body{
+        background-image: url(/img/bg.png);
+      }
+    </style>
+
+
+
+
+<!-- Fade Effect -->
+
+    <style>
+      .fade {
+        transition: all 800ms linear;
+        -webkit-transform: translate3d(0,0,0);
+        -moz-transform: translate3d(0,0,0);
+        -ms-transform: translate3d(0,0,0);
+        -o-transform: translate3d(0,0,0);
+        transform: translate3d(0,0,0);
+        opacity: 1;
+      }
+
+      .fade.out{
+        opacity: 0;
+      }
+    </style>
+
+
+<!-- Import Font -->
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
+
+
+        <script>lsloader.load("js/jquery.min.js","/js/jquery.min.js?qcusAULNeBksqffqUM2+Ig==")</script>
+    
+    
+    <script>function Queue(){this.dataStore=[];this.offer=b;this.poll=d;this.execNext=a;this.debug=false;this.startDebug=c;function b(e){if(this.debug){console.log("Offered a Queued Function.")}if(typeof e==="function"){this.dataStore.push(e)}else{console.log("You must offer a function.")}}function d(){if(this.debug){console.log("Polled a Queued Function.")}return this.dataStore.shift()}function a(){var e=this.poll();if(e!==undefined){if(this.debug){console.log("Run a Queued Function.")}e()}}function c(){this.debug=true}}var queue=new Queue();</script>
+
+    <!-- Analytics -->
+    
+
+    <!-- Custom Head -->
+    
+</head>
+
+
+    
+        <body id="scheme-Paradox" class="lazy">
+            <div class="material-layout  mdl-js-layout has-drawer is-upgraded">
+                
+
+                <!-- Main Container -->
+                <main class="material-layout__content" id="main">
+
+                    <!-- Top Anchor -->
+                    <div id="top"></div>
+
+                    
+                        <!-- Hamburger Button -->
+                        <button class="MD-burger-icon sidebar-toggle">
+                            <span class="MD-burger-layer"></span>
+                        </button>
+                    
+
+                    <!-- Post TOC -->
+
+    
+    <!-- Back Button -->
+    <!--
+    <div class="material-back" id="backhome-div" tabindex="0">
+        <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+           href="#" onclick="window.history.back();return false;"
+           target="_self"
+           role="button"
+           data-upgraded=",MaterialButton,MaterialRipple">
+            <i class="material-icons" role="presentation">arrow_back</i>
+            <span class="mdl-button__ripple-container">
+                <span class="mdl-ripple"></span>
+            </span>
+        </a>
+    </div>
+    -->
+
+    <!-- Left aligned menu below button -->
+    <button id="post-toc-trigger-btn"
+        class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">format_list_numbered</i>
+    </button>
+
+    
+    <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn" style="max-height:80vh; overflow-y:scroll;">
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#文件上传"><span class="post-toc-number">1.</span> <span class="post-toc-text">文件上传</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#step1-创建UploadService"><span class="post-toc-number">1.0.1.</span> <span class="post-toc-text">step1 创建UploadService</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#step2-构建文件RequestBody"><span class="post-toc-number">1.0.2.</span> <span class="post-toc-text">step2 构建文件RequestBody</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#step3-构建MultipartBody-进行上传"><span class="post-toc-number">1.0.3.</span> <span class="post-toc-text">step3 构建MultipartBody 进行上传</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#文件下载"><span class="post-toc-number">2.</span> <span class="post-toc-text">文件下载</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Step-1-创建ApiService-so-easy"><span class="post-toc-number">2.0.1.</span> <span class="post-toc-text">Step 1 创建ApiService   (so easy!)</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Step2-获取ResponseBody-进行文件流的读写"><span class="post-toc-number">2.0.2.</span> <span class="post-toc-text">Step2 获取ResponseBody 进行文件流的读写</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#方法分析："><span class="post-toc-number">2.0.3.</span> <span class="post-toc-text">方法分析：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Step-3-下载进度"><span class="post-toc-number">2.0.4.</span> <span class="post-toc-text">Step 3 下载进度</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Step-4在Activity中进行文件下载测试"><span class="post-toc-number">2.0.5.</span> <span class="post-toc-text">Step 4在Activity中进行文件下载测试</span></a></li></ol></li></ol></li></ol>
+        <!--
+        <li class="mdl-menu__item">
+            Some Action
+        </li>
+        -->
+    </ul>
+    
+
+
+
+
+
+<!-- Layouts -->
+
+    <!-- Post Module -->
+    <div class="material-post_container">
+
+        <div class="material-post mdl-grid">
+            <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
+
+                <!-- Post Header(Thumbnail & Title) -->
+                
+    <!-- Paradox Post Header -->
+    
+        
+            <!-- Random Thumbnail -->
+            <div class="post_thumbnail-random mdl-card__media mdl-color-text--grey-50">
+            <script type="text/ls-javascript" id="post-thumbnail-script">
+    var randomNum = Math.floor(Math.random() * 19 + 1);
+
+    $('.post_thumbnail-random').attr('data-original', '/img/random/material-' + randomNum + '.png');
+    $('.post_thumbnail-random').addClass('lazy');
+</script>
+
+        
+    
+            <p class="article-headline-p">
+                Retrofit2 文件上传和 Retrofit 下载文件并使用RxJava更新进度
+            </p>
+        </div>
+
+
+
+
+
+                
+                    <!-- Paradox Post Info -->
+                    <div class="mdl-color-text--grey-700 mdl-card__supporting-text meta">
+
+    <!-- Author Avatar -->
+    <div id="author-avatar">
+        <img src="/img/avatar.png" width="44px" height="44px" alt="Author Avatar"/>
+    </div>
+    <!-- Author Name & Date -->
+    <div>
+        <strong>ScWen7</strong>
+        <span>8月 03, 2017</span>
+    </div>
+
+    <div class="section-spacer"></div>
+
+    <!-- Favorite -->
+    <!--
+        <button id="article-functions-like-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon btn-like">
+            <i class="material-icons" role="presentation">favorite</i>
+            <span class="visuallyhidden">favorites</span>
+        </button>
+    -->
+
+    <!-- Qrcode -->
+    
+        <button id="article-functions-qrcode-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+    <i class="material-icons" role="presentation">devices other</i>
+    <span class="visuallyhidden">devices other</span>
+</button>
+<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-qrcode-button">
+    <li class="mdl-menu__item">在其它设备中阅读本文章</li>
+    
+        <img src="https://pan.baidu.com/share/qrcode?w=246&h=246&url=http://yoursite.com/2017/08/03/2017-07-03-Retrofit上传下载/">
+    
+</ul>
+    
+
+    <!-- Tags (bookmark) -->
+    
+    <button id="article-functions-viewtags-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+        <i class="material-icons" role="presentation">bookmark</i>
+        <span class="visuallyhidden">bookmark</span>
+    </button>
+    <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-viewtags-button">
+        <li class="mdl-menu__item">
+        
+    </ul>
+    
+
+    <!-- Share -->
+    <button id="article-fuctions-share-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+    <i class="material-icons" role="presentation">share</i>
+    <span class="visuallyhidden">share</span>
+</button>
+<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-fuctions-share-button">
+    
+
+    
+
+    <!-- Share Weibo -->
+    
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=Retrofit2 文件上传和 Retrofit 下载文件并使用RxJava更新进度&url=http://yoursite.com/2017/08/03/2017-07-03-Retrofit上传下载/index.html&pic=&searchPic=false&style=simple" target="_blank">
+            <li class="mdl-menu__item">
+                分享到微博
+            </li>
+        </a>
+    
+
+    <!-- Share Twitter -->
+    
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=Retrofit2 文件上传和 Retrofit 下载文件并使用RxJava更新进度&url=http://yoursite.com/2017/08/03/2017-07-03-Retrofit上传下载/index.html&via=ScWen7" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Twitter
+            </li>
+        </a>
+    
+
+    <!-- Share Facebook -->
+    
+
+    <!-- Share Google+ -->
+    
+
+    <!-- Share LinkedIn -->
+    
+
+    <!-- Share QQ -->
+    
+        <a class="post_share-link" href="http://connect.qq.com/widget/shareqq/index.html?site=ScWen7&#39;s Blog&title=Retrofit2 文件上传和 Retrofit 下载文件并使用RxJava更新进度&summary=ScWen7的个人博客 包含Android Java&pics=http://yoursite.com/img/favicon.png&url=http://yoursite.com/2017/08/03/2017-07-03-Retrofit上传下载/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 QQ
+            </li>
+        </a>
+    
+
+    <!-- Share Telegram -->
+    
+</ul>
+
+</div>
+
+                
+
+                <!-- Post Content -->
+                <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
+    
+        <p>项目中使用了Retrofit2 网络框架，对Retrofit的文件上传和下载进行记录。</p>
+<h2 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h2><hr>
+<p>文件上传 一般采用POST 的方式，并使用@Multipart 声明为多部分，可同时上传文本和文件，接口设置如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">interface UploadService &#123;</div><div class="line">    @Multipart</div><div class="line">    @POST(&quot;uploadImg&quot;)</div><div class="line">    Observable&lt;BaseResult&lt;String&gt;&gt; upload(</div><div class="line">            @Part List&lt;MultipartBody.Part&gt; partList);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="step1-创建UploadService"><a href="#step1-创建UploadService" class="headerlink" title="step1 创建UploadService"></a>step1 创建UploadService</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">OkHttpClient httpClient = new OkHttpClient.Builder()</div><div class="line">        .connectTimeout(10, TimeUnit.SECONDS)  //连接超时</div><div class="line">        .readTimeout(10, TimeUnit.SECONDS)   //读取超时</div><div class="line">        .build();</div><div class="line"></div><div class="line">Retrofit retrofit = new Retrofit.Builder().baseUrl(Contacts.BASE_URL)  //配置Retrofit 端</div><div class="line">        .addConverterFactory(FastJsonConvertFactory.create())</div><div class="line">        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())</div><div class="line">        .client(httpClient)</div><div class="line">        .build();</div><div class="line"></div><div class="line">UploadService uploadService = retrofit.create(UploadService.class);</div></pre></td></tr></table></figure>
+<h4 id="step2-构建文件RequestBody"><a href="#step2-构建文件RequestBody" class="headerlink" title="step2 构建文件RequestBody"></a>step2 构建文件RequestBody</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">// 创建 RequestBody，用于封装 请求RequestBody</div><div class="line">File imageFile = new File(filePath);  //上传文件对象</div><div class="line">RequestBody requestFile =</div><div class="line">        RequestBody.create(guessMimeType(imageFile.getName()), imageFile);  //这里使用了工具类，获取文件类型</div></pre></td></tr></table></figure>
+<p>guseeMimeType方法为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">private static MediaType guessMimeType(String path) &#123;</div><div class="line">    FileNameMap fileNameMap = URLConnection.getFileNameMap();</div><div class="line">    path = path.replace(&quot;#&quot;, &quot;&quot;);   //解决文件名中含有#号异常的问题</div><div class="line">    String contentType = fileNameMap.getContentTypeFor(path);</div><div class="line">    if (contentType == null) &#123;</div><div class="line">        contentType = &quot;application/octet-stream&quot;;</div><div class="line">    &#125;</div><div class="line">    return MediaType.parse(contentType);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="step3-构建MultipartBody-进行上传"><a href="#step3-构建MultipartBody-进行上传" class="headerlink" title="step3 构建MultipartBody 进行上传"></a>step3 构建MultipartBody 进行上传</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">MultipartBody.Builder builder = new MultipartBody.Builder()</div><div class="line">        .setType(MultipartBody.FORM)//表单类型 &quot;multipart/form-data&quot;    </div><div class="line">        .addFormDataPart(&quot;version&quot;, Contacts.version)   //   项目的接口公共参数</div><div class="line">        .addFormDataPart(&quot;data&quot;, data_json)   //json 字符串</div><div class="line">        .addFormDataPart(&quot;sign&quot;, sign)</div><div class="line">        .addFormDataPart(&quot;file&quot;, imageFile.getName(), requestFile);   //上传的文件</div><div class="line"></div><div class="line">List&lt;MultipartBody.Part&gt; parts = builder.build().parts();</div><div class="line">//进行上传</div><div class="line">uploadService.upload(parts)</div><div class="line">                .compose(RxSchedulerHepler.&lt;BaseResult&lt;String&gt;&gt;io_main());   //线程切换</div></pre></td></tr></table></figure>
+<h2 id="文件下载"><a href="#文件下载" class="headerlink" title="文件下载"></a>文件下载</h2><hr>
+<p>文件下载相较于 文件上传复杂一点,其中包含了 ResponseBody 流的读取，文件的写入，下载进度的更新</p>
+<p>之前进度之类的更新，采用的是接口回调的形式进行更新，自从RxJava的出现改变了这样的方式，采用观察者的订阅方式进行进度的更新。</p>
+<p>下载接口的设计如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">@GET</div><div class="line">@Streaming    //使用Streaming 方式 Retrofit 不会一次性将ResponseBody 读取进入内存，否则文件很多容易OOM</div><div class="line">Flowable&lt;ResponseBody&gt; download2(@Url String url);  //返回值使用 ResponseBody 之后会对ResponseBody 进行读取</div></pre></td></tr></table></figure>
+<h4 id="Step-1-创建ApiService-so-easy"><a href="#Step-1-创建ApiService-so-easy" class="headerlink" title="Step 1 创建ApiService   (so easy!)"></a>Step 1 创建ApiService   (so easy!)</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">OkHttpClient httpClient = new OkHttpClient.Builder()</div><div class="line">        .build();</div><div class="line"></div><div class="line"></div><div class="line">Retrofit retrofit = new Retrofit.Builder().baseUrl(Contacts.BASE_URL)</div><div class="line">        .addConverterFactory(FastJsonConvertFactory.create())</div><div class="line">        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())</div><div class="line">        .client(httpClient)</div><div class="line">        .build();</div><div class="line"></div><div class="line">ApiService apiService = retrofit.create(ApiService.class);</div></pre></td></tr></table></figure>
+<h4 id="Step2-获取ResponseBody-进行文件流的读写"><a href="#Step2-获取ResponseBody-进行文件流的读写" class="headerlink" title="Step2 获取ResponseBody 进行文件流的读写"></a>Step2 获取ResponseBody 进行文件流的读写</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">apiService.download2(url)</div><div class="line">        .flatMap(new Function&lt;ResponseBody, Publisher&lt;Boolean&gt;&gt;() &#123;</div><div class="line">            @Override</div><div class="line">            public Publisher&lt;Boolean&gt; apply(@NonNull final ResponseBody responseBody) throws Exception &#123;</div><div class="line">                return Flowable.create(new FlowableOnSubscribe&lt;Boolean&gt;() &#123;</div><div class="line">                    @Override</div><div class="line">                    public void subscribe(FlowableEmitter&lt;Boolean&gt; e) throws Exception &#123;</div><div class="line">                    </div><div class="line">                        File saveFile = new File(filePath, fileName);</div><div class="line">                        InputStream inputStream = null;</div><div class="line">                        OutputStream outputStream = null;</div><div class="line">                        try &#123;</div><div class="line">                            try &#123;</div><div class="line">                                int readLen;</div><div class="line">                            </div><div class="line">                                byte[] buffer = new byte[1024];</div><div class="line"></div><div class="line">                                inputStream = responseBody.byteStream();</div><div class="line">                                outputStream = new FileOutputStream(saveFile);</div><div class="line"></div><div class="line">                          </div><div class="line">                                while ((readLen = inputStream.read(buffer)) != -1 &amp;&amp; !e.isCancelled()) &#123;</div><div class="line">                                    outputStream.write(buffer, 0, readLen);</div><div class="line">                                &#125;</div><div class="line">                                outputStream.flush(); // This is important!!!</div><div class="line">                                e.onComplete();</div><div class="line">                            &#125; finally &#123;</div><div class="line">                                closeQuietly(inputStream);</div><div class="line">                                closeQuietly(outputStream);</div><div class="line">                                closeQuietly(responseBody);</div><div class="line">                            &#125;</div><div class="line">                        &#125; catch (Exception exception) &#123;</div><div class="line">							e.onError(exception);</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                &#125;, BackpressureStrategy.LATEST);</div><div class="line">            &#125;</div><div class="line">        &#125;)</div></pre></td></tr></table></figure>
+<p>其中包含了一个关闭资源方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public static void closeQuietly(Closeable closeable) &#123;</div><div class="line">    if (closeable != null) &#123;</div><div class="line">        try &#123;</div><div class="line">            closeable.close();</div><div class="line">        &#125; catch (RuntimeException rethrown) &#123;</div><div class="line">            throw rethrown;</div><div class="line">        &#125; catch (Exception ignored) &#123;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="方法分析："><a href="#方法分析：" class="headerlink" title="方法分析："></a>方法分析：</h4><p>采用RxJava2 的Flowable ,Flowable 在Observable 的基础上进行了背压的处理</p>
+<p>接着获取到ResponseBody,使用RxJava的flatMap 对数据源进行变换，利用FlowableEmitter可以将下载成功的消息发射出去</p>
+<p>接着就是熟悉的文件读写操作文件读写完成之后，发射 成功的信息</p>
+<h4 id="Step-3-下载进度"><a href="#Step-3-下载进度" class="headerlink" title="Step 3 下载进度"></a>Step 3 下载进度</h4><p>Step 2中完成了文件的读写，但是缺少了挺重要的进度回调操作，对Step 2 的代码进行改进</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line">apiService.download2(url)</div><div class="line">        .flatMap(new Function&lt;ResponseBody, Publisher&lt;DownloadStatus&gt;&gt;() &#123;</div><div class="line">            @Override</div><div class="line">            public Publisher&lt;DownloadStatus&gt; apply(@NonNull final ResponseBody responseBody) throws Exception &#123;</div><div class="line">                return Flowable.create(new FlowableOnSubscribe&lt;DownloadStatus&gt;() &#123;</div><div class="line">                    @Override</div><div class="line">                    public void subscribe(FlowableEmitter&lt;DownloadStatus&gt; e) throws Exception &#123;</div><div class="line">						//创建文件</div><div class="line">                        File saveFile = new File(filePath, fileName);</div><div class="line"></div><div class="line">                        InputStream inputStream = null;</div><div class="line">                        OutputStream outputStream = null;</div><div class="line">                        try &#123;</div><div class="line">                            try &#123;</div><div class="line">                                int readLen;</div><div class="line">                                int downloadSize = 0;</div><div class="line">                                byte[] buffer = new byte[8192];</div><div class="line"></div><div class="line">                                DownloadStatus status = new DownloadStatus();</div><div class="line">                                inputStream = responseBody.byteStream();  //获取 输入流</div><div class="line">                                outputStream = new FileOutputStream(saveFile);  //文件的输出流</div><div class="line"></div><div class="line">                                long contentLength = responseBody.contentLength();  //文件的总长度</div><div class="line"></div><div class="line">                                status.setTotalSize(contentLength);   </div><div class="line"></div><div class="line">                                while ((readLen = inputStream.read(buffer)) != -1 &amp;&amp; !e.isCancelled()) &#123;</div><div class="line">                                    outputStream.write(buffer, 0, readLen);</div><div class="line">                                    downloadSize += readLen;  </div><div class="line">                                    status.setDownloadSize(downloadSize);</div><div class="line">                                    e.onNext(status);  //读取完一段就将下载进度发射出去</div><div class="line">                                &#125;</div><div class="line"></div><div class="line">                                outputStream.flush(); // This is important!!!</div><div class="line">                                e.onComplete();   //发射下载完成的信息</div><div class="line">                            &#125; finally &#123;</div><div class="line">                                closeQuietly(inputStream);</div><div class="line">                                closeQuietly(outputStream);</div><div class="line">                                closeQuietly(responseBody);</div><div class="line">                            &#125;</div><div class="line">                        &#125; catch (Exception exception) &#123;</div><div class="line"></div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                &#125;, BackpressureStrategy.LATEST);</div><div class="line">            &#125;</div><div class="line">        &#125;)</div><div class="line">        .toObservable()  //转换成我们熟悉的Observable </div><div class="line">        .debounce(200, TimeUnit.MICROSECONDS)  //进行200秒的过滤操作</div><div class="line">        .compose(RxSchedulerHepler.&lt;DownloadStatus&gt;io_main());  //线程切换</div></pre></td></tr></table></figure>
+<p>DownLoadStatus对下载的状态进行了包装，包含了下载长度，总长度 字段</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div></pre></td><td class="code"><pre><div class="line">public class DownloadStatus implements Parcelable &#123;</div><div class="line">    public static final Creator&lt;DownloadStatus&gt; CREATOR</div><div class="line">            = new Creator&lt;DownloadStatus&gt;() &#123;</div><div class="line">        @Override</div><div class="line">        public DownloadStatus createFromParcel(Parcel source) &#123;</div><div class="line">            return new DownloadStatus(source);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public DownloadStatus[] newArray(int size) &#123;</div><div class="line">            return new DownloadStatus[size];</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line"></div><div class="line">    private long totalSize;</div><div class="line">    private long downloadSize;</div><div class="line"></div><div class="line">    public DownloadStatus() &#123;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public DownloadStatus(long downloadSize, long totalSize) &#123;</div><div class="line">        this.downloadSize = downloadSize;</div><div class="line">        this.totalSize = totalSize;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public DownloadStatus(boolean isChunked, long downloadSize, long totalSize) &#123;</div><div class="line"></div><div class="line">        this.downloadSize = downloadSize;</div><div class="line">        this.totalSize = totalSize;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    protected DownloadStatus(Parcel in) &#123;</div><div class="line"></div><div class="line">        this.totalSize = in.readLong();</div><div class="line">        this.downloadSize = in.readLong();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public long getTotalSize() &#123;</div><div class="line">        return totalSize;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void setTotalSize(long totalSize) &#123;</div><div class="line">        this.totalSize = totalSize;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public long getDownloadSize() &#123;</div><div class="line">        return downloadSize;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void setDownloadSize(long downloadSize) &#123;</div><div class="line">        this.downloadSize = downloadSize;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * 获得格式化的总Size</div><div class="line">     *</div><div class="line">     * @return example: 2KB , 10MB</div><div class="line">     */</div><div class="line">    public String getFormatTotalSize() &#123;</div><div class="line">        return formatSize(totalSize);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public String getFormatDownloadSize() &#123;</div><div class="line">        return formatSize(downloadSize);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public static String formatSize(long size) &#123;</div><div class="line">        String hrSize;</div><div class="line">        double b = size;</div><div class="line">        double k = size / 1024.0;</div><div class="line">        double m = ((size / 1024.0) / 1024.0);</div><div class="line">        double g = (((size / 1024.0) / 1024.0) / 1024.0);</div><div class="line">        double t = ((((size / 1024.0) / 1024.0) / 1024.0) / 1024.0);</div><div class="line">        DecimalFormat dec = new DecimalFormat(&quot;0.00&quot;);</div><div class="line">        if (t &gt; 1) &#123;</div><div class="line">            hrSize = dec.format(t).concat(&quot; TB&quot;);</div><div class="line">        &#125; else if (g &gt; 1) &#123;</div><div class="line">            hrSize = dec.format(g).concat(&quot; GB&quot;);</div><div class="line">        &#125; else if (m &gt; 1) &#123;</div><div class="line">            hrSize = dec.format(m).concat(&quot; MB&quot;);</div><div class="line">        &#125; else if (k &gt; 1) &#123;</div><div class="line">            hrSize = dec.format(k).concat(&quot; KB&quot;);</div><div class="line">        &#125; else &#123;</div><div class="line">            hrSize = dec.format(b).concat(&quot; B&quot;);</div><div class="line">        &#125;</div><div class="line">        return hrSize;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    /**</div><div class="line">     * 获得格式化的状态字符串</div><div class="line">     *</div><div class="line">     * @return example: 2MB/36MB</div><div class="line">     */</div><div class="line">    public String getFormatStatusString() &#123;</div><div class="line">        return getFormatDownloadSize() + &quot;/&quot; + getFormatTotalSize();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * 获得下载的百分比, 保留两位小数</div><div class="line">     *</div><div class="line">     * @return example: 5.25%</div><div class="line">     */</div><div class="line">    public String getPercent() &#123;</div><div class="line">        String percent;</div><div class="line">        Double result;</div><div class="line">        if (totalSize == 0L) &#123;</div><div class="line">            result = 0.0;</div><div class="line">        &#125; else &#123;</div><div class="line">            result = downloadSize * 1.0 / totalSize;</div><div class="line">        &#125;</div><div class="line">        NumberFormat nf = NumberFormat.getPercentInstance();</div><div class="line">        nf.setMinimumFractionDigits(2);//控制保留小数点后几位，2：表示保留2位小数点</div><div class="line">        percent = nf.format(result);</div><div class="line">        return percent;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * 获得下载的百分比数值</div><div class="line">     *</div><div class="line">     * @return example: 5%  will return 5, 10% will return 10.</div><div class="line">     */</div><div class="line">    public long getPercentNumber() &#123;</div><div class="line">        double result;</div><div class="line">        if (totalSize == 0L) &#123;</div><div class="line">            result = 0.0;</div><div class="line">        &#125; else &#123;</div><div class="line">            result = downloadSize * 1.0 / totalSize;</div><div class="line">        &#125;</div><div class="line">        return (long) (result * 100);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public int describeContents() &#123;</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void writeToParcel(Parcel dest, int flags) &#123;</div><div class="line">        dest.writeLong(this.totalSize);</div><div class="line">        dest.writeLong(this.downloadSize);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="Step-4在Activity中进行文件下载测试"><a href="#Step-4在Activity中进行文件下载测试" class="headerlink" title="Step 4在Activity中进行文件下载测试"></a>Step 4在Activity中进行文件下载测试</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">String url = &quot;http://www.bz55.com/uploads/allimg/150701/140-150F1142638.jpg&quot;;</div><div class="line">Disposable    mSubscribe = DownLoadUtil3.download(url, Environment.getExternalStorageDirectory().getAbsolutePath(), &quot;140-150F1142638.jpg&quot;)</div><div class="line">                .subscribe(new Consumer&lt;DownloadStatus&gt;() &#123;</div><div class="line">                    @Override</div><div class="line">                    public void accept(@NonNull DownloadStatus downloadStatus) throws Exception &#123;</div><div class="line">                        long downloadSize = downloadStatus.getDownloadSize();</div><div class="line">                        long totalSize = downloadStatus.getTotalSize();</div><div class="line">                        Log.e(&quot;TAG&quot;, &quot;onNext  --&gt;&quot; + downloadSize + &quot;------&quot; + totalSize);</div><div class="line">                    &#125;</div><div class="line">                &#125;, new Consumer&lt;Throwable&gt;() &#123;</div><div class="line">                    @Override</div><div class="line">                    public void accept(@NonNull Throwable throwable) throws Exception &#123;</div><div class="line">                        Log.e(&quot;TAG&quot;, &quot;onError:---&gt;&quot; + throwable);</div><div class="line">                    &#125;</div><div class="line">                &#125;, new Action() &#123;</div><div class="line">                    @Override</div><div class="line">                    public void run() throws Exception &#123;</div><div class="line">                        Log.e(&quot;TAG&quot;, &quot;下载完成&quot;);</div><div class="line">                    &#125;</div><div class="line">                &#125;);</div><div class="line">    //停止下载的方式为 mSubscribe.dispose();</div></pre></td></tr></table></figure>
+    
+
+    
+</div>
+
+
+                
+
+                <!-- Post Comments -->
+                
+                    
+                
+            </div>
+
+            <!-- Post Prev & Next Nav -->
+            <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
+    <!-- Prev Nav -->
+    
+        <a href="/2017/08/03/2017-06-30-Tinker/" id="post_nav-newer" class="prev-content">
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_back</i>
+            </button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            新篇
+        </a>
+    
+
+    <!-- Section Spacer -->
+    <div class="section-spacer"></div>
+
+    <!-- Next Nav -->
+    
+        <a href="/2017/08/03/2017-06-27-ViewGroupAdapter/" id="post_nav-older" class="next-content">
+            旧篇
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_forward</i>
+            </button>
+        </a>
+    
+</nav>
+
+        </div>
+    </div>
+
+
+
+                    
+                        <!-- Overlay For Active Sidebar -->
+<div class="sidebar-overlay"></div>
+
+<!-- Material sidebar -->
+<aside id="sidebar" class="sidebar sidebar-colored sidebar-fixed-left" role="navigation">
+    <div id="sidebar-main">
+        <!-- Sidebar Header -->
+        <div class="sidebar-header header-cover" style="background-image: url(/img/sidebar_header.png);">
+    <!-- Top bar -->
+    <div class="top-bar"></div>
+
+    <!-- Sidebar toggle button -->
+    <button type="button" class="sidebar-toggle mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" style="display: initial;" data-upgraded=",MaterialButton,MaterialRipple">
+        <i class="material-icons">clear_all</i>
+        <span class="mdl-button__ripple-container">
+            <span class="mdl-ripple">
+            </span>
+        </span>
+    </button>
+
+    <!-- Sidebar Avatar -->
+    <div class="sidebar-image">
+        <img src="/img/avatar.png" alt="ScWen7's avatar">
+    </div>
+
+    <!-- Sidebar Email -->
+    <a data-toggle="dropdown" class="sidebar-brand" href="#settings-dropdown">
+        xxh783965@gmail.com
+        <b class="caret"></b>
+    </a>
+</div>
+
+
+        <!-- Sidebar Navigation  -->
+        <ul class="nav sidebar-nav">
+    <!-- User dropdown  -->
+    <li class="dropdown">
+        <ul id="settings-dropdown" class="dropdown-menu">
+            
+                <li>
+                    <a href="mailto:xxh783965@gmail.com" target="_blank" title="Email Me">
+                        
+                            <i class="material-icons sidebar-material-icons sidebar-indent-left1pc-element">email</i>
+                        
+                        Email Me
+                    </a>
+                </li>
+            
+        </ul>
+    </li>
+
+    <!-- Homepage -->
+    
+        <li id="sidebar-first-li">
+            <a href="/">
+                
+                    <i class="material-icons sidebar-material-icons">home</i>
+                
+                主页
+            </a>
+        </li>
+        
+    
+
+    <!-- Archives  -->
+    
+        <li class="dropdown">
+            <a href="#" class="ripple-effect dropdown-toggle" data-toggle="dropdown">
+                
+                    <i class="material-icons sidebar-material-icons">inbox</i>
+                
+                    归档
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+            <li>
+                <a class="sidebar_archives-link" href="/archives/2017/08/">八月 2017<span class="sidebar_archives-count">9</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/07/">七月 2017<span class="sidebar_archives-count">1</span></a>
+            </ul>
+        </li>
+        
+    
+
+    <!-- Categories  -->
+    
+        <li class="dropdown">
+            <a href="#" class="ripple-effect dropdown-toggle" data-toggle="dropdown">
+                
+                    <i class="material-icons sidebar-material-icons">chrome_reader_mode</i>
+                
+                分类
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                
+            </ul>
+        </li>
+        
+    
+
+    <!-- Pages  -->
+    
+
+    <!-- Article Number  -->
+    
+</ul>
+
+
+        <!-- Sidebar Footer -->
+        <!--
+I'm glad you use this theme, the development is no so easy, I hope you can keep the copyright, I will thank you so much.
+If you still want to delete the copyrights, could you still retain the first one? Which namely "Theme Material"
+It will not impact the appearance and can give developers a lot of support :)
+
+很高兴您使用并喜欢该主题，开发不易 十分谢谢与希望您可以保留一下版权声明。
+如果您仍然想删除的话 能否只保留第一项呢？即 "Theme Material"
+它不会影响美观并可以给开发者很大的支持和动力。 :)
+-->
+
+<!-- Sidebar Divider -->
+
+    <div class="sidebar-divider"></div>
+
+
+<!-- Theme Material -->
+
+    <a href="https://github.com/viosey/hexo-theme-material"  class="sidebar-footer-text-a" target="_blank">
+        <div class="sidebar-text mdl-button mdl-js-button mdl-js-ripple-effect sidebar-footer-text-div" data-upgraded=",MaterialButton,MaterialRipple">
+            主题 - Material
+            <span class="sidebar-badge badge-circle">i</span>
+        </div>
+    </a>
+
+
+<!-- Help & Support -->
+<!--
+
+-->
+
+<!-- Feedback -->
+<!--
+
+-->
+
+<!-- About Theme -->
+<!--
+
+-->
+
+    </div>
+
+    <!-- Sidebar Image -->
+    
+
+</aside>
+
+                    
+
+                    
+                        <!-- Footer Top Button -->
+                        <div id="back-to-top" class="toTop-wrap">
+    <a href="#top" class="toTop">
+        <i class="material-icons footer_top-i">expand_less</i>
+    </a>
+</div>
+
+                    
+
+                    <!--Footer-->
+<footer class="mdl-mini-footer" id="bottom">
+    
+        <!-- Paradox Footer Left Section -->
+        <div class="mdl-mini-footer--left-section sns-list">
+    <!-- Twitter -->
+    
+
+    <!-- Facebook -->
+    
+
+    <!-- Google + -->
+    
+
+    <!-- Weibo -->
+    
+
+    <!-- Instagram -->
+    
+
+    <!-- Tumblr -->
+    
+
+    <!-- Github -->
+    
+        <a href="https://github.com/ScWen7" target="_blank">
+            <button class="mdl-mini-footer--social-btn social-btn footer-sns-github">
+                <span class="visuallyhidden">Github</span>
+            </button><!--
+     --></a>
+    
+
+    <!-- LinkedIn -->
+    
+
+    <!-- Zhihu -->
+    
+
+    <!-- Bilibili -->
+    
+
+    <!-- Telegram -->
+    
+</div>
+
+
+        <!--Copyright-->
+        <div id="copyright">
+            Copyright&nbsp;©<script type="text/javascript">var fd = new Date();document.write("&nbsp;" + fd.getFullYear() + "&nbsp;");</script>ScWen7's Blog
+        </div>
+
+        <!-- Paradox Footer Right Section -->
+
+        <!--
+        I am glad you use this theme, the development is no so easy, I hope you can keep the copyright.
+        It will not impact the appearance and can give developers a lot of support :)
+
+        很高兴您使用该主题，开发不易，希望您可以保留一下版权声明。
+        它不会影响美观并可以给开发者很大的支持。 :)
+        -->
+
+        <div class="mdl-mini-footer--right-section">
+            <div>
+                <div class="footer-develop-div">Powered by <a href="https://hexo.io" target="_blank" class="footer-develop-a">Hexo</a></div>
+                <div class="footer-develop-div">Theme - <a href="https://github.com/viosey/hexo-theme-material" target="_blank" class="footer-develop-a">Material</a></div>
+            </div>
+        </div>
+    
+</footer>
+
+
+                    <!-- Import File -->
+
+
+    <script>lsloader.load("js/lazyload.min.js","/js/lazyload.min.js?1BcfzuNXqV+ntF6gq+5X3Q==")</script>
+    <script>lsloader.load("js/js.min.js","/js/js.min.js?oAl/+lvaqTFV31JXTmbrNA==")</script>
+
+
+
+    <script>lsloader.load("js/nprogress.js","/js/nprogress.js?pl3Qhb9lvqR1FlyLUna1Yw==")</script>
+
+
+<script type="text/ls-javascript" id="NProgress-script">
+    NProgress.configure({
+        showSpinner: true
+    });
+    NProgress.start();
+    $('#nprogress .bar').css({
+        'background': '#29d'
+    });
+    $('#nprogress .peg').css({
+        'box-shadow': '0 0 10px #29d, 0 0 15px #29d'
+    });
+    $('#nprogress .spinner-icon').css({
+        'border-top-color': '#29d',
+        'border-left-color': '#29d'
+    });
+    setTimeout(function() {
+        NProgress.done();
+        $('.fade').removeClass('out');
+    }, 800);
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- UC Browser Compatible -->
+<script>
+	var agent = navigator.userAgent.toLowerCase();
+	if(agent.indexOf('ucbrowser')>0) {
+		document.write('<link rel="stylesheet" href="/css/uc.css">');
+	   alert('由于 UC 浏览器使用极旧的内核，而本网站使用了一些新的特性。\n为了您能更好的浏览，推荐使用 Chrome 或 Firefox 浏览器。');
+	}
+</script>
+
+<!-- Window Load-->
+<script type="text/ls-javascript" id="window-load">
+    $(window).on('load', function() {
+        // Post_Toc parent position fixed
+        $('.post-toc-wrap').parent('.mdl-menu__container').css('position', 'fixed');
+    });
+</script>
+
+<!-- MathJax Load-->
+
+<script type="text/ls-javascript" id="lazy-load">
+    // Offer LazyLoad
+    queue.offer(function(){
+        $('.lazy').lazyload({
+            effect : 'show'
+        });
+    });
+
+    // Start Queue
+    $(document).ready(function(){
+        setInterval(function(){
+            queue.execNext();
+        },200);
+    });
+</script>
+
+<!-- Bing Background -->
+
+
+<script>
+    (function(){
+        var scriptList = document.querySelectorAll('script[type="text/ls-javascript"]')
+
+        for (var i = 0; i < scriptList.length; ++i) {
+            var item = scriptList[i];
+            lsloader.runInlineScript(item.id,item.id);
+        }
+    })()
+console.log('\n %c © Material Theme | Version: 1.4.0 | https://github.com/viosey/hexo-theme-material %c \n', 'color:#455a64;background:#e0e0e0;padding:5px 0;border-top-left-radius:5px;border-bottom-left-radius:5px;', 'color:#455a64;background:#e0e0e0;padding:5px 0;border-top-right-radius:5px;border-bottom-right-radius:5px;');
+</script>
+
+                </main>
+            </div>
+        </body>
+    
+</html>

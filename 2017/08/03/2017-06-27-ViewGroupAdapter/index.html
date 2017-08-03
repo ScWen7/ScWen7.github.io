@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html style="display: none;" lang="zh">
+    <head>
+    <meta charset="utf-8">
+    <!--
+        © Material Theme
+        https://github.com/viosey/hexo-theme-material
+        Version: 1.4.0 -->
+    <script>window.materialVersion = "1.4.0"</script>
+
+    <!-- Title -->
+    
+    <title>
+        
+            ViewGroup 动态添加布局Adapter模式封装 | 
+        
+        ScWen7&#39;s Blog
+    </title>
+
+    <!-- dns prefetch -->
+    <meta http-equiv="x-dns-prefetch-control" content="on">
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <!-- Meta & Info -->
+    <meta http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="theme-color" content="#0097A7">
+    <meta name="author" content="ScWen7">
+    <meta name="description" itemprop="description" content="ScWen7的个人博客 包含Android Java">
+    <meta name="keywords" content="Android Java">
+
+    <!-- Site Verification -->
+    
+    
+
+    <!-- Favicons -->
+    <link rel="icon shortcut" type="image/ico" href="/img/favicon.png">
+    <link rel="icon" sizes="192x192" href="/img/favicon.png">
+    <link rel="apple-touch-icon" href="/img/favicon.png">
+
+    <!--iOS -->
+    <meta name="apple-mobile-web-app-title" content="Title">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="480">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="ScWen7&#39;s Blog">
+
+    <!-- The Open Graph protocol -->
+    <meta property="og:url" content="http://yoursite.com">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="ViewGroup 动态添加布局Adapter模式封装 | ScWen7&#39;s Blog">
+    <meta property="og:image" content="/img/favicon.png" />
+    <meta property="og:description" content="ScWen7的个人博客 包含Android Java">
+    
+
+    
+        <meta property="article:published_time" content="8月 03, 2017" />
+        <meta property="article:modified_time" content="7月 04, 2017" />
+    
+
+    <!-- The Twitter Card protocol -->
+    <meta name="twitter:title" content="ViewGroup 动态添加布局Adapter模式封装 | ScWen7&#39;s Blog">
+    <meta name="twitter:description" content="ScWen7的个人博客 包含Android Java">
+    <meta name="twitter:image" content="/img/favicon.png">
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="http://yoursite.com" />
+
+    <!-- Add canonical link for SEO -->
+    
+        <link rel="canonical" href="http://yoursite.com/2017/08/03/2017-06-27-ViewGroupAdapter/index.html" />
+    
+
+    <!-- Structured-data for SEO -->
+    
+        
+
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "ScWen7&#39;s Blog",
+        "logo": "/img/favicon.png"
+    },
+    "author": {
+        "@type": "Person",
+        "name": "ScWen7",
+        "image": {
+            "@type": "ImageObject",
+            "url": "/img/favicon.png"
+        },
+        "description": "加油努力每一天!"
+    },
+    "headline": "ViewGroup 动态添加布局Adapter模式封装",
+    "url": "http://yoursite.com/2017/08/03/2017-06-27-ViewGroupAdapter/index.html",
+    "datePublished": "8月 03, 2017",
+    "dateModified": "7月 04, 2017",
+    "description": "ScWen7的个人博客 包含Android Java",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "http://yoursite.com"
+    }
+}
+</script>
+
+
+    
+
+    <!--[if lte IE 9]>
+        <link rel="stylesheet" href="/css/ie-blocker.css">
+
+        
+            <script src="/js/ie-blocker.zhCN.js"></script>
+        
+    <![endif]-->
+
+    <!-- Import lsloader -->
+    <script>(function(){window.lsloader={jsRunSequence:[],jsnamemap:{},cssnamemap:{}};lsloader.removeLS=function(key){try{localStorage.removeItem(key)}catch(e){}};lsloader.setLS=function(key,val){try{localStorage.setItem(key,val)}catch(e){}};lsloader.getLS=function(key){var val="";try{val=localStorage.getItem(key)}catch(e){val=""}return val};versionString="/*"+materialVersion+"*/";lsloader.clean=function(){try{var keys=[];for(var i=0;i<localStorage.length;i++){keys.push(localStorage.key(i))}keys.forEach(function(key){var data=lsloader.getLS(key);if(data&&data.indexOf(versionString)===-1){lsloader.removeLS(key)}})}catch(e){}};lsloader.clean();lsloader.load=function(jsname,jspath,cssonload){cssonload=cssonload||function(){};var code;code=this.getLS(jsname);if(code&&code.indexOf(versionString)===-1){this.removeLS(jsname);this.requestResource(jsname,jspath,cssonload);return}if(code){var versionNumber=code.split(versionString)[0];if(versionNumber!=jspath){console.log("reload:"+jspath);this.removeLS(jsname);this.requestResource(jsname,jspath,cssonload);return}code=code.split(versionString)[1];if(/\.js?.+$/.test(versionNumber)){this.jsRunSequence.push({name:jsname,code:code});this.runjs(jspath,jsname,code)}else{document.getElementById(jsname).appendChild(document.createTextNode(code));cssonload()}}else{this.requestResource(jsname,jspath,cssonload)}};lsloader.requestResource=function(name,path,cssonload){var that=this;if(/\.js?.+$/.test(path)){this.iojs(path,name,function(path,name,code){that.setLS(name,path+versionString+code);that.runjs(path,name,code)})}else if(/\.css?.+$/.test(path)){this.iocss(path,name,function(code){document.getElementById(name).appendChild(document.createTextNode(code));that.setLS(name,path+versionString+code)},cssonload)}};lsloader.iojs=function(path,jsname,callback){var that=this;that.jsRunSequence.push({name:jsname,code:""});try{var xhr=new XMLHttpRequest;xhr.open("get",path,true);xhr.onreadystatechange=function(){if(xhr.readyState==4){if(xhr.status>=200&&xhr.status<300||xhr.status==304){if(xhr.response!=""){callback(path,jsname,xhr.response);return}}that.jsfallback(path,jsname)}};xhr.send(null)}catch(e){that.jsfallback(path,jsname)}};lsloader.iocss=function(path,jsname,callback,cssonload){var that=this;try{var xhr=new XMLHttpRequest;xhr.open("get",path,true);xhr.onreadystatechange=function(){if(xhr.readyState==4){if(xhr.status>=200&&xhr.status<300||xhr.status==304){if(xhr.response!=""){callback(xhr.response);cssonload();return}}that.cssfallback(path,jsname,cssonload)}};xhr.send(null)}catch(e){that.cssfallback(path,jsname,cssonload)}};lsloader.iofonts=function(path,jsname,callback,cssonload){var that=this;try{var xhr=new XMLHttpRequest;xhr.open("get",path,true);xhr.onreadystatechange=function(){if(xhr.readyState==4){if(xhr.status>=200&&xhr.status<300||xhr.status==304){if(xhr.response!=""){callback(xhr.response);cssonload();return}}that.cssfallback(path,jsname,cssonload)}};xhr.send(null)}catch(e){that.cssfallback(path,jsname,cssonload)}};lsloader.runjs=function(path,name,code){if(!!name&&!!code){for(var k in this.jsRunSequence){if(this.jsRunSequence[k].name==name){this.jsRunSequence[k].code=code}}}if(!!this.jsRunSequence[0]&&!!this.jsRunSequence[0].code&&this.jsRunSequence[0].status!="failed"){var script=document.createElement("script");script.appendChild(document.createTextNode(this.jsRunSequence[0].code));script.type="text/javascript";document.getElementsByTagName("head")[0].appendChild(script);this.jsRunSequence.shift();if(this.jsRunSequence.length>0){this.runjs()}}else if(!!this.jsRunSequence[0]&&this.jsRunSequence[0].status=="failed"){var that=this;var script=document.createElement("script");script.src=this.jsRunSequence[0].path;script.type="text/javascript";this.jsRunSequence[0].status="loading";script.onload=function(){that.jsRunSequence.shift();if(that.jsRunSequence.length>0){that.runjs()}};document.body.appendChild(script)}};lsloader.tagLoad=function(path,name){this.jsRunSequence.push({name:name,code:"",path:path,status:"failed"});this.runjs()};lsloader.jsfallback=function(path,name){if(!!this.jsnamemap[name]){return}else{this.jsnamemap[name]=name}for(var k in this.jsRunSequence){if(this.jsRunSequence[k].name==name){this.jsRunSequence[k].code="";this.jsRunSequence[k].status="failed";this.jsRunSequence[k].path=path}}this.runjs()};lsloader.cssfallback=function(path,name,cssonload){if(!!this.cssnamemap[name]){return}else{this.cssnamemap[name]=1}var link=document.createElement("link");link.type="text/css";link.href=path;link.rel="stylesheet";link.onload=link.onerror=cssonload;var root=document.getElementsByTagName("script")[0];root.parentNode.insertBefore(link,root)};lsloader.runInlineScript=function(scriptId,codeId){var code=document.getElementById(codeId).innerText;this.jsRunSequence.push({name:scriptId,code:code});this.runjs()};lsloader.loadCombo=function(jslist){var updateList="";var requestingModules={};for(var k in jslist){var LS=this.getLS(jslist[k].name);if(!!LS){var version=LS.split(versionString)[0];var code=LS.split(versionString)[1]}else{var version=""}if(version==jslist[k].path){this.jsRunSequence.push({name:jslist[k].name,code:code,path:jslist[k].path})}else{this.jsRunSequence.push({name:jslist[k].name,code:null,path:jslist[k].path,status:"comboloading"});requestingModules[jslist[k].name]=true;updateList+=(updateList==""?"":";")+jslist[k].path}}var that=this;if(!!updateList){var xhr=new XMLHttpRequest;xhr.open("get",combo+updateList,true);xhr.onreadystatechange=function(){if(xhr.readyState==4){if(xhr.status>=200&&xhr.status<300||xhr.status==304){if(xhr.response!=""){that.runCombo(xhr.response,requestingModules);return}}else{for(var i in that.jsRunSequence){if(requestingModules[that.jsRunSequence[i].name]){that.jsRunSequence[i].status="failed"}}that.runjs()}}};xhr.send(null)}this.runjs()};lsloader.runCombo=function(comboCode,requestingModules){comboCode=comboCode.split("/*combojs*/");comboCode.shift();for(var k in this.jsRunSequence){if(!!requestingModules[this.jsRunSequence[k].name]&&!!comboCode[0]){this.jsRunSequence[k].status="comboJS";this.jsRunSequence[k].code=comboCode[0];this.setLS(this.jsRunSequence[k].name,this.jsRunSequence[k].path+versionString+comboCode[0]);comboCode.shift()}}this.runjs()}})();</script>
+
+    <!-- Import CSS & jQuery -->
+    
+        <style id="css/material.min.css"></style><script>if(typeof window.lsLoadCSSMaxNums === "undefined")window.lsLoadCSSMaxNums = 0;window.lsLoadCSSMaxNums++;lsloader.load("css/material.min.css","/css/material.min.css?fJTiM/K1J3dWIruo3pxtAw==",function(){if(typeof window.lsLoadCSSNums === "undefined")window.lsLoadCSSNums = 0;window.lsLoadCSSNums++;if(window.lsLoadCSSNums == window.lsLoadCSSMaxNums)document.documentElement.style.display="";})</script>
+        <style id="css/style.min.css"></style><script>if(typeof window.lsLoadCSSMaxNums === "undefined")window.lsLoadCSSMaxNums = 0;window.lsLoadCSSMaxNums++;lsloader.load("css/style.min.css","/css/style.min.css?oCSEO3ST+aEypEwttTDI9g==",function(){if(typeof window.lsLoadCSSNums === "undefined")window.lsLoadCSSNums = 0;window.lsLoadCSSNums++;if(window.lsLoadCSSNums == window.lsLoadCSSMaxNums)document.documentElement.style.display="";})</script>
+        
+        
+            <style>
+    
+    
+    
+    
+    
+    
+    
+    .footer-sns-github {
+        background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgY2xhc3M9Imljb24iIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiPjxwYXRoIGQ9Ik0xMzguNCA3OGMtNi40IDEuNC0yNi40IDE0LjItMzYgMjIuOC04IDcuMi0yMiAyOS44LTI0LjQgMzkuMi0xLjYgNi40LTIgMTEzLjItMS42IDM2OCAuNiAyOTkuNCAxIDM1OS44IDMuNCAzNjQgMTEgMjAuMiAyMS42IDMyLjQgMzcuMiA0MyAxNS42IDEwLjYgMTcuMiAxMS4yIDM0LjIgMTMuMiAxMC42IDEuMiA2My40IDEuNiAxMjcuNiAxLjRsMTA5LjYtLjYgNi02LjggNi4yLTYuOC0xLjItMjUuMmMtLjgtMTUuOC0uMi0zMy40IDEuNC00Ny4yIDMtMjUuNCAxLjQtMzYuMi02LTQzLjItNS00LjYtNi4yLTQuOC0zMC42LTQuMi0yNy42LjgtMjQgMS42LTY4LjgtMTYtOC42LTMuNC0yMi42LTE4LTI4LjQtMjkuOC0xMS40LTIyLjgtMjctNDUtMzkuMi01NS42LTE0LTEyLjItMTkuOC0yMC44LTE5LjgtMjguNiAwLTExLjYgMTMuNi0xMi42IDMzLjItMi40IDE2LjYgOC44IDIwLjggMTIuNCA0MC44IDM2LjIgMjQuMiAyOC42IDMxIDMzLjYgNTQgMzkuNiAxNS4yIDQgNDIuMiAzIDUxLjQtMS44IDktNC42IDE4LTE1LjIgMjQuNC0yOS4yIDExLjQtMjQuMiA3LjQtMzEuMi0yMC42LTM2LjgtOS44LTItMjkuMi04LTQzLjQtMTMuNC00MC40LTE1LjgtNjQuNi0zNy40LTg1LjQtNzYuMi0xMS42LTIxLjgtMTUuNC0zMy0xOC4yLTUzLjYtNC4yLTMyLjItNC44LTYwLjItMS40LTg0IDMuNC0yMy44IDYuOC0zMi44IDIwLjItNTQgNC02IDguOC0xNS42IDExLTIxLjQgMy44LTEwIDMuOC0xMS42IDEtMzAtNS4yLTM0LjItMy4yLTUyLjQgNy42LTcwLjIgNy4yLTEyLjIgMTUtMTcuMiAyNC4yLTE1LjggMTIuOCAyLjIgNTIgMTcuNCA2Ni44IDI2LjIgMjYgMTUgMjkgMTUuNCA4Mi40IDcuMiAyNC42LTMuOCAzMy44LTQuMiA2MC0zLjIgMTcgLjYgNDEuNCAzIDU0IDUuMiAzOC40IDYuNiA0OS42IDUuMiA3My0xMCA2LjYtNC4yIDE3LjQtOS40IDI0LTExLjYgNi42LTIuMiAxNi01LjggMjEtOC4yIDEzLTYgMjgtNS42IDM1LjYuOCAxMi40IDEwLjQgMTguNiA0MS40IDE0LjQgNzEuNi00LjQgMzAuNi0zIDM5LjQgOC40IDUzLjggMy40IDQuNCAxMS4yIDE5LjIgMTcuNCAzMy4yTDc3NSA0NDN2NzhsLTEwIDI4Yy0xNS4yIDQzLjItMzYuOCA3My4yLTY2LjIgOTIuOC0xMy40IDguOC01NyAyNS40LTc2LjggMjktMjguMiA1LjItMzMuMiAxMi42LTIyIDMyLjIgMTEuMiAxOS40IDEyLjQgMzIuOCAxMS42IDEyOS42bC0uNiA4NS44IDUuNCA0LjZjMy42IDMgOS4yIDUuMiAxNiA2IDUuOC44IDYwLjIgMSAxMjAuNi42IDEwOC40LS42IDExMC4yLS42IDExOS01IDI0LTExLjYgNDAtMjcuNCA1MS42LTUwLjZsNS40LTExIC42LTM0N2MuNC0yMjMtLjItMzUzLjQtMS40LTM2NS0yLTE3LTIuNi0xOC42LTEzLTM0LTEwLjYtMTUuNC0yMi44LTI2LjItNDMuMi0zNy4yLTQuMi0yLjQtNjQuNi0yLjgtMzY2LTMuMi0xOTguNiAwLTM2NCAuNC0zNjcuNiAxLjR6Ii8+PC9zdmc+);
+    }
+    
+    
+    
+    
+    
+</style>
+
+        
+        <!-- Config CSS -->
+
+<!-- Other Styles -->
+<style>
+  body, html {
+    font-family: Roboto, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  }
+
+  a {
+    color: #00838F;
+  }
+
+  .mdl-card__media,
+  #search-label,
+  #search-form-label:after,
+  #scheme-Paradox .hot_tags-count,
+  #scheme-Paradox .sidebar_archives-count,
+  #scheme-Paradox .sidebar-colored .sidebar-header,
+  #scheme-Paradox .sidebar-colored .sidebar-badge{
+    background-color: #0097A7 !important;
+  }
+
+  /* Sidebar User Drop Down Menu Text Color */
+  #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:hover,
+  #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:focus {
+    color: #0097A7 !important;
+  }
+
+  #post_entry-right-info,
+  .sidebar-colored .sidebar-nav li:hover > a,
+  .sidebar-colored .sidebar-nav li:hover > a i,
+  .sidebar-colored .sidebar-nav li > a:hover,
+  .sidebar-colored .sidebar-nav li > a:hover i,
+  .sidebar-colored .sidebar-nav li > a:focus i,
+  .sidebar-colored .sidebar-nav > .open > a,
+  .sidebar-colored .sidebar-nav > .open > a:hover,
+  .sidebar-colored .sidebar-nav > .open > a:focus,
+  #ds-reset #ds-ctx .ds-ctx-entry .ds-ctx-head a {
+    color: #0097A7 !important;
+  }
+
+  .toTop {
+    background: #757575 !important;
+  }
+
+  .material-layout .material-post>.material-nav,
+  .material-layout .material-index>.material-nav,
+  .material-nav a {
+    color: #757575;
+  }
+
+  #scheme-Paradox .MD-burger-layer {
+    background-color: #757575;
+  }
+
+  #scheme-Paradox #post-toc-trigger-btn {
+    color: #757575;
+  }
+
+  .post-toc a:hover {
+    color: #00838F;
+    text-decoration: underline;
+  }
+
+</style>
+
+
+<!-- Theme Background Related-->
+
+    <style>
+      body{
+        background-image: url(/img/bg.png);
+      }
+    </style>
+
+
+
+
+<!-- Fade Effect -->
+
+    <style>
+      .fade {
+        transition: all 800ms linear;
+        -webkit-transform: translate3d(0,0,0);
+        -moz-transform: translate3d(0,0,0);
+        -ms-transform: translate3d(0,0,0);
+        -o-transform: translate3d(0,0,0);
+        transform: translate3d(0,0,0);
+        opacity: 1;
+      }
+
+      .fade.out{
+        opacity: 0;
+      }
+    </style>
+
+
+<!-- Import Font -->
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
+
+
+        <script>lsloader.load("js/jquery.min.js","/js/jquery.min.js?qcusAULNeBksqffqUM2+Ig==")</script>
+    
+    
+    <script>function Queue(){this.dataStore=[];this.offer=b;this.poll=d;this.execNext=a;this.debug=false;this.startDebug=c;function b(e){if(this.debug){console.log("Offered a Queued Function.")}if(typeof e==="function"){this.dataStore.push(e)}else{console.log("You must offer a function.")}}function d(){if(this.debug){console.log("Polled a Queued Function.")}return this.dataStore.shift()}function a(){var e=this.poll();if(e!==undefined){if(this.debug){console.log("Run a Queued Function.")}e()}}function c(){this.debug=true}}var queue=new Queue();</script>
+
+    <!-- Analytics -->
+    
+
+    <!-- Custom Head -->
+    
+</head>
+
+
+    
+        <body id="scheme-Paradox" class="lazy">
+            <div class="material-layout  mdl-js-layout has-drawer is-upgraded">
+                
+
+                <!-- Main Container -->
+                <main class="material-layout__content" id="main">
+
+                    <!-- Top Anchor -->
+                    <div id="top"></div>
+
+                    
+                        <!-- Hamburger Button -->
+                        <button class="MD-burger-icon sidebar-toggle">
+                            <span class="MD-burger-layer"></span>
+                        </button>
+                    
+
+                    <!-- Post TOC -->
+
+    
+    <!-- Back Button -->
+    <!--
+    <div class="material-back" id="backhome-div" tabindex="0">
+        <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+           href="#" onclick="window.history.back();return false;"
+           target="_self"
+           role="button"
+           data-upgraded=",MaterialButton,MaterialRipple">
+            <i class="material-icons" role="presentation">arrow_back</i>
+            <span class="mdl-button__ripple-container">
+                <span class="mdl-ripple"></span>
+            </span>
+        </a>
+    </div>
+    -->
+
+    <!-- Left aligned menu below button -->
+    <button id="post-toc-trigger-btn"
+        class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">format_list_numbered</i>
+    </button>
+
+    
+    <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn" style="max-height:80vh; overflow-y:scroll;">
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ViewGroupAdapter-动态的向Viewgroup添加布局，采用adapter-适配器模式"><span class="post-toc-number">1.</span> <span class="post-toc-text">ViewGroupAdapter 动态的向Viewgroup添加布局，采用adapter 适配器模式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#在开发过程中，经常会需要动态的向-ViewGroup-控件中添加-子布局-通过循环-addView-的形式来完成操作"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">在开发过程中，经常会需要动态的向 ViewGroup 控件中添加 子布局 通过循环  addView()的形式来完成操作</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#布局代码如下："><span class="post-toc-number">1.2.</span> <span class="post-toc-text">布局代码如下：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#每一个item子视图的layout如下："><span class="post-toc-number">1.3.</span> <span class="post-toc-text">每一个item子视图的layout如下：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#接着就是向ll-horizontal控件中添加子View"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">接着就是向ll_horizontal控件中添加子View</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Adapter-父类接口为："><span class="post-toc-number">1.5.</span> <span class="post-toc-text">Adapter 父类接口为：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#实现类BaseAdapter代码如下："><span class="post-toc-number">1.6.</span> <span class="post-toc-text">实现类BaseAdapter代码如下：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#ViewHolder代码如下："><span class="post-toc-number">1.7.</span> <span class="post-toc-text">ViewHolder代码如下：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#封装过后使用的代码如下："><span class="post-toc-number">1.8.</span> <span class="post-toc-text">封装过后使用的代码如下：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#这时候使用起来是不是很爽？再也不用写那么多的重复代码了"><span class="post-toc-number">1.9.</span> <span class="post-toc-text">这时候使用起来是不是很爽？再也不用写那么多的重复代码了</span></a></li></ol></li></ol>
+        <!--
+        <li class="mdl-menu__item">
+            Some Action
+        </li>
+        -->
+    </ul>
+    
+
+
+
+
+
+<!-- Layouts -->
+
+    <!-- Post Module -->
+    <div class="material-post_container">
+
+        <div class="material-post mdl-grid">
+            <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
+
+                <!-- Post Header(Thumbnail & Title) -->
+                
+    <!-- Paradox Post Header -->
+    
+        
+            <!-- Random Thumbnail -->
+            <div class="post_thumbnail-random mdl-card__media mdl-color-text--grey-50">
+            <script type="text/ls-javascript" id="post-thumbnail-script">
+    var randomNum = Math.floor(Math.random() * 19 + 1);
+
+    $('.post_thumbnail-random').attr('data-original', '/img/random/material-' + randomNum + '.png');
+    $('.post_thumbnail-random').addClass('lazy');
+</script>
+
+        
+    
+            <p class="article-headline-p">
+                ViewGroup 动态添加布局Adapter模式封装
+            </p>
+        </div>
+
+
+
+
+
+                
+                    <!-- Paradox Post Info -->
+                    <div class="mdl-color-text--grey-700 mdl-card__supporting-text meta">
+
+    <!-- Author Avatar -->
+    <div id="author-avatar">
+        <img src="/img/avatar.png" width="44px" height="44px" alt="Author Avatar"/>
+    </div>
+    <!-- Author Name & Date -->
+    <div>
+        <strong>ScWen7</strong>
+        <span>8月 03, 2017</span>
+    </div>
+
+    <div class="section-spacer"></div>
+
+    <!-- Favorite -->
+    <!--
+        <button id="article-functions-like-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon btn-like">
+            <i class="material-icons" role="presentation">favorite</i>
+            <span class="visuallyhidden">favorites</span>
+        </button>
+    -->
+
+    <!-- Qrcode -->
+    
+        <button id="article-functions-qrcode-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+    <i class="material-icons" role="presentation">devices other</i>
+    <span class="visuallyhidden">devices other</span>
+</button>
+<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-qrcode-button">
+    <li class="mdl-menu__item">在其它设备中阅读本文章</li>
+    
+        <img src="https://pan.baidu.com/share/qrcode?w=246&h=246&url=http://yoursite.com/2017/08/03/2017-06-27-ViewGroupAdapter/">
+    
+</ul>
+    
+
+    <!-- Tags (bookmark) -->
+    
+    <button id="article-functions-viewtags-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+        <i class="material-icons" role="presentation">bookmark</i>
+        <span class="visuallyhidden">bookmark</span>
+    </button>
+    <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-viewtags-button">
+        <li class="mdl-menu__item">
+        
+    </ul>
+    
+
+    <!-- Share -->
+    <button id="article-fuctions-share-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+    <i class="material-icons" role="presentation">share</i>
+    <span class="visuallyhidden">share</span>
+</button>
+<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-fuctions-share-button">
+    
+
+    
+
+    <!-- Share Weibo -->
+    
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=ViewGroup 动态添加布局Adapter模式封装&url=http://yoursite.com/2017/08/03/2017-06-27-ViewGroupAdapter/index.html&pic=&searchPic=false&style=simple" target="_blank">
+            <li class="mdl-menu__item">
+                分享到微博
+            </li>
+        </a>
+    
+
+    <!-- Share Twitter -->
+    
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=ViewGroup 动态添加布局Adapter模式封装&url=http://yoursite.com/2017/08/03/2017-06-27-ViewGroupAdapter/index.html&via=ScWen7" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Twitter
+            </li>
+        </a>
+    
+
+    <!-- Share Facebook -->
+    
+
+    <!-- Share Google+ -->
+    
+
+    <!-- Share LinkedIn -->
+    
+
+    <!-- Share QQ -->
+    
+        <a class="post_share-link" href="http://connect.qq.com/widget/shareqq/index.html?site=ScWen7&#39;s Blog&title=ViewGroup 动态添加布局Adapter模式封装&summary=ScWen7的个人博客 包含Android Java&pics=http://yoursite.com/img/favicon.png&url=http://yoursite.com/2017/08/03/2017-06-27-ViewGroupAdapter/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 QQ
+            </li>
+        </a>
+    
+
+    <!-- Share Telegram -->
+    
+</ul>
+
+</div>
+
+                
+
+                <!-- Post Content -->
+                <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
+    
+        <p>在开发过程中，经常会需要动态的向 ViewGroup 控件中添加 子布局 通过循环  <code>addView()</code>的形式来完成操作 ，当一个项目中有很多这样的情景时，出现了很多重复的代码，这时就考虑到将其进行封装</p>
+<h2 id="ViewGroupAdapter-动态的向Viewgroup添加布局，采用adapter-适配器模式"><a href="#ViewGroupAdapter-动态的向Viewgroup添加布局，采用adapter-适配器模式" class="headerlink" title="ViewGroupAdapter 动态的向Viewgroup添加布局，采用adapter 适配器模式"></a>ViewGroupAdapter 动态的向Viewgroup添加布局，采用adapter 适配器模式</h2><hr>
+<h3 id="在开发过程中，经常会需要动态的向-ViewGroup-控件中添加-子布局-通过循环-addView-的形式来完成操作"><a href="#在开发过程中，经常会需要动态的向-ViewGroup-控件中添加-子布局-通过循环-addView-的形式来完成操作" class="headerlink" title="在开发过程中，经常会需要动态的向 ViewGroup 控件中添加 子布局 通过循环  addView()的形式来完成操作"></a>在开发过程中，经常会需要动态的向 ViewGroup 控件中添加 子布局 通过循环  <code>addView()</code>的形式来完成操作</h3><p>类似于这样的界面，一个横向滑动的视图，外层控件使用的是 HorizontalScrollView 子布局为 LinearLayout</p>
+<p><img src="http://oqe10cpgp.bkt.clouddn.com/image/viewgroupadapter/shot.jpeg" alt="示例"></p>
+<h3 id="布局代码如下："><a href="#布局代码如下：" class="headerlink" title="布局代码如下："></a>布局代码如下：</h3><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div><div class="line">&lt;LinearLayout</div><div class="line">    xmlns:android="http://schemas.android.com/apk/res/android"</div><div class="line">    xmlns:tools="http://schemas.android.com/tools"</div><div class="line">    android:id="@+id/activity_main"</div><div class="line">    android:layout_width="match_parent"</div><div class="line">    android:layout_height="match_parent"</div><div class="line">    android:paddingBottom="@dimen/activity_vertical_margin"</div><div class="line">    android:paddingLeft="@dimen/activity_horizontal_margin"</div><div class="line">    android:paddingRight="@dimen/activity_horizontal_margin"</div><div class="line">    android:paddingTop="@dimen/activity_vertical_margin"</div><div class="line">    android:orientation="vertical"</div><div class="line">    tools:context="com.xxh.viewgroupadapter.demo.MainActivity"&gt;</div><div class="line"></div><div class="line">    &lt;HorizontalScrollView</div><div class="line">        android:layout_width="wrap_content"</div><div class="line">        android:layout_height="wrap_content"</div><div class="line">      &gt;</div><div class="line">        &lt;LinearLayout</div><div class="line">            android:id="@+id/ll_horizontal"</div><div class="line">            android:layout_width="wrap_content"</div><div class="line">            android:orientation="horizontal"</div><div class="line">            android:layout_height="wrap_content"&gt;&lt;/LinearLayout&gt;</div><div class="line">    &lt;/HorizontalScrollView&gt;</div><div class="line"></div><div class="line">    &lt;Button</div><div class="line">        android:text="测试刷新"</div><div class="line">        android:onClick="textRefresh"</div><div class="line">        android:layout_width="wrap_content"</div><div class="line">        android:layout_height="wrap_content"/&gt;</div><div class="line">&lt;/LinearLayout&gt;</div></pre></td></tr></table></figure>
+<h3 id="每一个item子视图的layout如下："><a href="#每一个item子视图的layout如下：" class="headerlink" title="每一个item子视图的layout如下："></a>每一个item子视图的layout如下：</h3><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div><div class="line">&lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"</div><div class="line">              android:layout_width="160dp"</div><div class="line">              android:layout_height="300dp"</div><div class="line">              android:layout_marginLeft="10dp"</div><div class="line">              android:layout_marginRight="10dp"</div><div class="line">              android:gravity="center_horizontal"</div><div class="line">              android:orientation="vertical"&gt;</div><div class="line"></div><div class="line">    &lt;ImageView</div><div class="line">        android:id="@+id/iv_icon"</div><div class="line">        android:layout_width="150dp"</div><div class="line">        android:layout_height="220dp"</div><div class="line">        android:scaleType="centerCrop"/&gt;</div><div class="line"></div><div class="line">    &lt;TextView</div><div class="line">        android:id="@+id/tv_title"</div><div class="line">        android:layout_width="wrap_content"</div><div class="line">        android:layout_height="wrap_content"</div><div class="line">        android:text="测试文本"/&gt;</div><div class="line"></div><div class="line">    &lt;Button</div><div class="line">        android:id="@+id/btn_test"</div><div class="line">        android:layout_width="wrap_content"</div><div class="line">        android:layout_height="wrap_content"</div><div class="line">        android:text="点击我"/&gt;</div><div class="line">&lt;/LinearLayout&gt;</div></pre></td></tr></table></figure>
+<h3 id="接着就是向ll-horizontal控件中添加子View"><a href="#接着就是向ll-horizontal控件中添加子View" class="headerlink" title="接着就是向ll_horizontal控件中添加子View"></a>接着就是向ll_horizontal控件中添加子View</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">bindViews</span><span class="params">()</span></span>&#123;</div><div class="line">       LayoutInflater layoutInflater = LayoutInflater.from(<span class="keyword">this</span>);</div><div class="line">       <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; mDatas.size(); i++) &#123;</div><div class="line">           TestBean item = mDatas.get(i);</div><div class="line">           <span class="comment">//初始化视图</span></div><div class="line">           View view = layoutInflater.inflate(R.layout.item_horizontal,ll_horizontal,<span class="keyword">false</span>);</div><div class="line">           <span class="comment">//初始化操作控件</span></div><div class="line">           ImageView iv_icon = (ImageView) view.findViewById(R.id.iv_icon);</div><div class="line">           TextView tv_title = (TextView) view.findViewById(R.id.tv_title);</div><div class="line">           Button  btn_test = (Button) view.findViewById(R.id.btn_test);</div><div class="line">           <span class="comment">//绑定数据</span></div><div class="line">           iv_icon.setImageResource(item.getImageId());</div><div class="line">           tv_title.setText(item.getName());</div><div class="line">           <span class="comment">//点击事件</span></div><div class="line">           btn_test.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</div><div class="line">               <span class="meta">@Override</span></div><div class="line">               <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</div><div class="line"></div><div class="line">               &#125;</div><div class="line">           &#125;);</div><div class="line">           <span class="comment">//item 的点击事件</span></div><div class="line">           view.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</div><div class="line">               <span class="meta">@Override</span></div><div class="line">               <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</div><div class="line"></div><div class="line">               &#125;</div><div class="line">           &#125;);</div><div class="line">           <span class="comment">//item 的长按事件</span></div><div class="line">           view.setOnLongClickListener(<span class="keyword">new</span> View.OnLongClickListener() &#123;</div><div class="line">               <span class="meta">@Override</span></div><div class="line">               <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onLongClick</span><span class="params">(View v)</span> </span>&#123;</div><div class="line">                   <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">               &#125;</div><div class="line">           &#125;);</div><div class="line"></div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>看似这段代码没什么问题，但是如果 Item 中有多个控件需要绑定数据，绑定点击事件，就需要我们写很多重复的 代码，本着打死不重复的原则，对其进行封装</p>
+<p>参考List View 的形式进行Adapter 封装，三个角色 ：ViewGroup控件，Adapter ,ViewHolder</p>
+<p>Adapter 提供 数据与视图的绑定，ViewHolder 提供视图的创建和视图的基本操作</p>
+<h3 id="Adapter-父类接口为："><a href="#Adapter-父类接口为：" class="headerlink" title="Adapter 父类接口为："></a>Adapter 父类接口为：</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IViewGroupAdapter</span>  </span>&#123;</div><div class="line"></div><div class="line">    <span class="function">View <span class="title">getView</span><span class="params">(ViewGroup parent, <span class="keyword">int</span> pos)</span></span>; <span class="comment">//获取视图</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span></span>; <span class="comment">//获取数据 count</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">notifyDatasetChanged</span><span class="params">()</span></span>;  </div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">registerDataSetObserver</span><span class="params">(DataSetObserver dataSetObserver)</span></span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">unregisterDataSetObserver</span><span class="params">(DataSetObserver dataSetObserver)</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="实现类BaseAdapter代码如下："><a href="#实现类BaseAdapter代码如下：" class="headerlink" title="实现类BaseAdapter代码如下："></a>实现类BaseAdapter代码如下：</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">BaseAdapter</span>&lt;<span class="title">T</span>&gt; <span class="keyword">implements</span> <span class="title">IViewGroupAdapter</span> </span>&#123;</div><div class="line">    <span class="keyword">protected</span> List&lt;T&gt; mDatas; <span class="comment">//数据源</span></div><div class="line">    <span class="keyword">protected</span> Context mContext; </div><div class="line"></div><div class="line">    <span class="keyword">protected</span> DataSetObservable mDataSetObservable;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> mItemViewId;  <span class="comment">//layoutId</span></div><div class="line"></div><div class="line">    ViewGroup mParent; <span class="comment">//需要绑定的ViewGroup对象</span></div><div class="line"></div><div class="line">    OnItemClickListener mOnItemClickListener;</div><div class="line">    OnItemLongClickListener mOnItemLongClickListener;</div><div class="line"></div><div class="line"></div><div class="line">    DataSetObserver mDataSetObserver = <span class="keyword">new</span> DataSetObserver() &#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onChanged</span><span class="params">()</span> </span>&#123;</div><div class="line">          <span class="comment">//数据源发生变化时，刷新界面</span></div><div class="line">            refreshUI();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onInvalidated</span><span class="params">()</span> </span>&#123;</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">BaseAdapter</span><span class="params">(Context context, List&lt;T&gt; datas, <span class="keyword">int</span> itemViewId)</span> </span>&#123;</div><div class="line">        mDatas = datas;</div><div class="line">        mContext = context;</div><div class="line">        <span class="keyword">this</span>.mItemViewId = itemViewId;</div><div class="line">        mDataSetObservable = <span class="keyword">new</span> DataSetObservable();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">notifyDatasetChanged</span><span class="params">()</span> </span>&#123;</div><div class="line">        mDataSetObservable.notifyChanged();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">registerDataSetObserver</span><span class="params">(DataSetObserver dataSetObserver)</span> </span>&#123;</div><div class="line">        mDataSetObservable.registerObserver(dataSetObserver);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">unregisterDataSetObserver</span><span class="params">(DataSetObserver dataSetObserver)</span> </span>&#123;</div><div class="line">        mDataSetObservable.unregisterObserver(dataSetObserver);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 获取视图</div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span> parent</div><div class="line">     * <span class="doctag">@param</span> pos</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> View <span class="title">getView</span><span class="params">(ViewGroup parent, <span class="keyword">int</span> pos)</span> </span>&#123;</div><div class="line">        <span class="comment">//实现getView</span></div><div class="line">        ViewHolder holder = onCreateViewHolder(parent, pos);</div><div class="line">        convert(parent, holder, mDatas.get(pos), pos);</div><div class="line">        <span class="keyword">return</span> holder.itemView;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">convert</span><span class="params">(ViewGroup parent, ViewHolder holder, T item, <span class="keyword">int</span> pos)</span></span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> ViewHolder <span class="title">onCreateViewHolder</span><span class="params">(ViewGroup parent, <span class="keyword">int</span> pos)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> ViewHolder.carateViewHolder(mContext, parent, mItemViewId, pos);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * ViewGroup调用，得到ItemCount</div><div class="line">     *</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> mDatas != <span class="keyword">null</span> ? mDatas.size() : <span class="number">0</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> List&lt;T&gt; <span class="title">getDatas</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> mDatas;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> BaseAdapter <span class="title">setDatas</span><span class="params">(List&lt;T&gt; datas)</span> </span>&#123;</div><div class="line">        mDatas = datas;</div><div class="line">        notifyDatasetChanged();</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">bindViews</span><span class="params">(ViewGroup parent)</span> </span>&#123;</div><div class="line">      <span class="keyword">this</span>.mParent = parent;</div><div class="line">        mDataSetObservable.unregisterAll();</div><div class="line">        mParent = parent;</div><div class="line">        registerDataSetObserver(mDataSetObserver);</div><div class="line">        refreshUI();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> BaseAdapter&lt;T&gt; <span class="title">refreshUI</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (mParent == <span class="keyword">null</span> ) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">        &#125;</div><div class="line">        mParent.removeAllViews();</div><div class="line">        <span class="keyword">int</span> count = getCount();</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</div><div class="line"></div><div class="line">            <span class="keyword">final</span> View itemView = getView(mParent, i);</div><div class="line">            mParent.addView(itemView);</div><div class="line">            itemView.setTag(i);</div><div class="line"></div><div class="line"></div><div class="line">            <span class="keyword">if</span> (<span class="keyword">null</span> != mOnItemClickListener) &#123;</div><div class="line">                itemView.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</div><div class="line">                    <span class="meta">@Override</span></div><div class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</div><div class="line">                        Integer tag = (Integer) v.getTag();</div><div class="line">                        mOnItemClickListener.onItemClick(mParent,v,tag);</div><div class="line">                    &#125;</div><div class="line">                &#125;);</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">if</span> (<span class="keyword">null</span> != mOnItemLongClickListener) &#123;</div><div class="line">                itemView.setOnLongClickListener(<span class="keyword">new</span> View.OnLongClickListener() &#123;</div><div class="line">                    <span class="meta">@Override</span></div><div class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onLongClick</span><span class="params">(View v)</span> </span>&#123;</div><div class="line">                        Integer tag = (Integer) v.getTag();</div><div class="line">                        <span class="keyword">return</span> mOnItemLongClickListener.onItemLongClick(mParent,v,tag);</div><div class="line">                    &#125;</div><div class="line">                &#125;);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> BaseAdapter&lt;T&gt; <span class="title">setOnItemClickListener</span><span class="params">(OnItemClickListener onItemClickListener)</span> </span>&#123;</div><div class="line">        mOnItemClickListener = onItemClickListener;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> BaseAdapter&lt;T&gt; <span class="title">setOnItemLongClickListener</span><span class="params">(OnItemLongClickListener onItemLongClickListener)</span> </span>&#123;</div><div class="line">        mOnItemLongClickListener = onItemLongClickListener;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="ViewHolder代码如下："><a href="#ViewHolder代码如下：" class="headerlink" title="ViewHolder代码如下："></a>ViewHolder代码如下：</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ViewHolder</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span>  View itemView;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> SparseArray&lt;View&gt; mChilds;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Context mContext;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span>  ViewHolder <span class="title">carateViewHolder</span><span class="params">(Context context, ViewGroup parent, <span class="keyword">int</span> itemViewId, <span class="keyword">int</span> pos)</span></span>&#123;</div><div class="line"></div><div class="line">        <span class="keyword">return</span>  <span class="keyword">new</span> ViewHolder( context,  parent,  itemViewId, pos);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ViewHolder</span><span class="params">(Context context, ViewGroup parent, <span class="keyword">int</span> itemViewId, <span class="keyword">int</span> pos)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.mContext = context;</div><div class="line">        <span class="keyword">this</span>.mChilds = <span class="keyword">new</span> SparseArray&lt;&gt;();</div><div class="line">        itemView = LayoutInflater.from(context).inflate(itemViewId, parent, <span class="keyword">false</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> &lt;V extends View&gt; <span class="function">V <span class="title">findViewById</span><span class="params">(<span class="keyword">int</span> id)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> getView(id);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> &lt;V extends View&gt; <span class="function">V <span class="title">getView</span><span class="params">(<span class="keyword">int</span> id)</span> </span>&#123;</div><div class="line">        View child = mChilds.get(id);</div><div class="line">        <span class="keyword">if</span> (child == <span class="keyword">null</span>) &#123;</div><div class="line">            child = itemView.findViewById(id);</div><div class="line">            mChilds.put(id, child);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> (V) child;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">  </div><div class="line">  <span class="comment">//-------------------------------------------------------分割线-----------------------------------------------------------------------</span></div><div class="line">  <span class="comment">//--------------------------------------------------以下的代码与逻辑无关，提供了视图的基本操作---------------------------------------------</span></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 设置TextView的值</div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span> viewId</div><div class="line">     * <span class="doctag">@param</span> text</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> ViewHolder <span class="title">setText</span><span class="params">(<span class="keyword">int</span> viewId, CharSequence text)</span> </span>&#123;</div><div class="line">        TextView tv = getView(viewId);</div><div class="line">        tv.setText(text);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> ViewHolder <span class="title">setSelected</span><span class="params">(<span class="keyword">int</span> viewId, <span class="keyword">boolean</span> selected)</span> </span>&#123;</div><div class="line">        View v = getView(viewId);</div><div class="line">        v.setSelected(selected);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> ViewHolder <span class="title">setImageResource</span><span class="params">(<span class="keyword">int</span> viewId, <span class="keyword">int</span> resId)</span> </span>&#123;</div><div class="line">        ImageView view = getView(viewId);</div><div class="line">        view.setImageResource(resId);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> ViewHolder <span class="title">setImageBitmap</span><span class="params">(<span class="keyword">int</span> viewId, Bitmap bitmap)</span> </span>&#123;</div><div class="line">        ImageView view = getView(viewId);</div><div class="line">        view.setImageBitmap(bitmap);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> ViewHolder <span class="title">setImageDrawable</span><span class="params">(<span class="keyword">int</span> viewId, Drawable drawable)</span> </span>&#123;</div><div class="line">        ImageView view = getView(viewId);</div><div class="line">        view.setImageDrawable(drawable);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> ViewHolder <span class="title">setBackgroundColor</span><span class="params">(<span class="keyword">int</span> viewId, <span class="keyword">int</span> color)</span> </span>&#123;</div><div class="line">        View view = getView(viewId);</div><div class="line">        view.setBackgroundColor(color);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> ViewHolder <span class="title">setBackgroundRes</span><span class="params">(<span class="keyword">int</span> viewId, <span class="keyword">int</span> backgroundRes)</span> </span>&#123;</div><div class="line">        View view = getView(viewId);</div><div class="line">        view.setBackgroundResource(backgroundRes);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> ViewHolder <span class="title">setTextColor</span><span class="params">(<span class="keyword">int</span> viewId, <span class="keyword">int</span> textColor)</span> </span>&#123;</div><div class="line">        TextView view = getView(viewId);</div><div class="line">        view.setTextColor(textColor);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> ViewHolder <span class="title">setTextColorRes</span><span class="params">(<span class="keyword">int</span> viewId, <span class="keyword">int</span> textColorRes)</span> </span>&#123;</div><div class="line">        TextView view = getView(viewId);</div><div class="line">        view.setTextColor(itemView.getContext().getResources().getColor(textColorRes));</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@SuppressLint</span>(<span class="string">"NewApi"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> ViewHolder <span class="title">setAlpha</span><span class="params">(<span class="keyword">int</span> viewId, <span class="keyword">float</span> value)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.HONEYCOMB) &#123;</div><div class="line">            getView(viewId).setAlpha(value);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="comment">// Pre-honeycomb hack to set Alpha value</span></div><div class="line">            AlphaAnimation alpha = <span class="keyword">new</span> AlphaAnimation(value, value);</div><div class="line">            alpha.setDuration(<span class="number">0</span>);</div><div class="line">            alpha.setFillAfter(<span class="keyword">true</span>);</div><div class="line">            getView(viewId).startAnimation(alpha);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> ViewHolder <span class="title">setVisible</span><span class="params">(<span class="keyword">int</span> viewId, <span class="keyword">boolean</span> visible)</span> </span>&#123;</div><div class="line">        View view = getView(viewId);</div><div class="line">        view.setVisibility(visible ? View.VISIBLE : View.GONE);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> ViewHolder <span class="title">linkify</span><span class="params">(<span class="keyword">int</span> viewId)</span> </span>&#123;</div><div class="line">        TextView view = getView(viewId);</div><div class="line">        Linkify.addLinks(view, Linkify.ALL);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> ViewHolder <span class="title">setTypeface</span><span class="params">(Typeface typeface, <span class="keyword">int</span>... viewIds)</span> </span>&#123;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> viewId : viewIds) &#123;</div><div class="line">            TextView view = getView(viewId);</div><div class="line">            view.setTypeface(typeface);</div><div class="line">            view.setPaintFlags(view.getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> ViewHolder <span class="title">setProgress</span><span class="params">(<span class="keyword">int</span> viewId, <span class="keyword">int</span> progress)</span> </span>&#123;</div><div class="line">        ProgressBar view = getView(viewId);</div><div class="line">        view.setProgress(progress);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> ViewHolder <span class="title">setProgress</span><span class="params">(<span class="keyword">int</span> viewId, <span class="keyword">int</span> progress, <span class="keyword">int</span> max)</span> </span>&#123;</div><div class="line">        ProgressBar view = getView(viewId);</div><div class="line">        view.setMax(max);</div><div class="line">        view.setProgress(progress);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> ViewHolder <span class="title">setMax</span><span class="params">(<span class="keyword">int</span> viewId, <span class="keyword">int</span> max)</span> </span>&#123;</div><div class="line">        ProgressBar view = getView(viewId);</div><div class="line">        view.setMax(max);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> ViewHolder <span class="title">setRating</span><span class="params">(<span class="keyword">int</span> viewId, <span class="keyword">float</span> rating)</span> </span>&#123;</div><div class="line">        RatingBar view = getView(viewId);</div><div class="line">        view.setRating(rating);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> ViewHolder <span class="title">setRating</span><span class="params">(<span class="keyword">int</span> viewId, <span class="keyword">float</span> rating, <span class="keyword">int</span> max)</span> </span>&#123;</div><div class="line">        RatingBar view = getView(viewId);</div><div class="line">        view.setMax(max);</div><div class="line">        view.setRating(rating);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> ViewHolder <span class="title">setTag</span><span class="params">(<span class="keyword">int</span> viewId, Object tag)</span> </span>&#123;</div><div class="line">        View view = getView(viewId);</div><div class="line">        view.setTag(tag);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> ViewHolder <span class="title">setTag</span><span class="params">(<span class="keyword">int</span> viewId, <span class="keyword">int</span> key, Object tag)</span> </span>&#123;</div><div class="line">        View view = getView(viewId);</div><div class="line">        view.setTag(key, tag);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> ViewHolder <span class="title">setChecked</span><span class="params">(<span class="keyword">int</span> viewId, <span class="keyword">boolean</span> checked)</span> </span>&#123;</div><div class="line">        Checkable view = (Checkable) getView(viewId);</div><div class="line">        view.setChecked(checked);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 关于事件的</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> ViewHolder <span class="title">setOnClickListener</span><span class="params">(<span class="keyword">int</span> viewId,</span></span></div><div class="line">                                         View.OnClickListener listener) &#123;</div><div class="line">        View view = getView(viewId);</div><div class="line">        view.setOnClickListener(listener);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> ViewHolder <span class="title">setOnTouchListener</span><span class="params">(<span class="keyword">int</span> viewId,</span></span></div><div class="line">                                         View.OnTouchListener listener) &#123;</div><div class="line">        View view = getView(viewId);</div><div class="line">        view.setOnTouchListener(listener);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> ViewHolder <span class="title">setOnLongClickListener</span><span class="params">(<span class="keyword">int</span> viewId,</span></span></div><div class="line">                                             View.OnLongClickListener listener) &#123;</div><div class="line">        View view = getView(viewId);</div><div class="line">        view.setOnLongClickListener(listener);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="封装过后使用的代码如下："><a href="#封装过后使用的代码如下：" class="headerlink" title="封装过后使用的代码如下："></a>封装过后使用的代码如下：</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">mBaseAdapter = <span class="keyword">new</span> BaseAdapter&lt;TestBean&gt;(<span class="keyword">this</span>, mDatas, R.layout.item_horizontal) &#123;</div><div class="line">           <span class="meta">@Override</span></div><div class="line">           <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">convert</span><span class="params">(ViewGroup parent, ViewHolder holder, TestBean item, <span class="keyword">final</span> <span class="keyword">int</span> pos)</span> </span>&#123;</div><div class="line">               holder.setImageResource(R.id.iv_icon, item.getImageId())</div><div class="line">                       .setText(R.id.tv_title, item.getName())</div><div class="line">                       .setOnClickListener(R.id.btn_test, <span class="keyword">new</span> View.OnClickListener() &#123;</div><div class="line">                           <span class="meta">@Override</span></div><div class="line">                           <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</div><div class="line">                               Toast.makeText(MainActivity.<span class="keyword">this</span>, <span class="string">"按钮点击事件："</span> + pos, Toast.LENGTH_SHORT).show();</div><div class="line">                           &#125;</div><div class="line">                       &#125;);</div><div class="line">           &#125;</div><div class="line">       &#125;;</div><div class="line">       mBaseAdapter.setOnItemClickListener(<span class="keyword">new</span> OnItemClickListener() &#123;</div><div class="line">           <span class="meta">@Override</span></div><div class="line">           <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onItemClick</span><span class="params">(ViewGroup parent, View itemView, <span class="keyword">int</span> position)</span> </span>&#123;</div><div class="line">               Toast.makeText(MainActivity.<span class="keyword">this</span>, <span class="string">"Item 的点击事件"</span>, Toast.LENGTH_SHORT).show();</div><div class="line">           &#125;</div><div class="line">       &#125;).setOnItemLongClickListener(<span class="keyword">new</span> OnItemLongClickListener() &#123;</div><div class="line">           <span class="meta">@Override</span></div><div class="line">           <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onItemLongClick</span><span class="params">(ViewGroup parent, View itemView, <span class="keyword">int</span> position)</span> </span>&#123;</div><div class="line">               Toast.makeText(MainActivity.<span class="keyword">this</span>, <span class="string">"Item的长按事件"</span>, Toast.LENGTH_SHORT).show();</div><div class="line">               <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">           &#125;</div><div class="line">       &#125;).bindViews(ll_horizontal);</div></pre></td></tr></table></figure>
+<h3 id="这时候使用起来是不是很爽？再也不用写那么多的重复代码了"><a href="#这时候使用起来是不是很爽？再也不用写那么多的重复代码了" class="headerlink" title="这时候使用起来是不是很爽？再也不用写那么多的重复代码了"></a>这时候使用起来是不是很爽？再也不用写那么多的重复代码了</h3>
+    
+
+    
+</div>
+
+
+                
+
+                <!-- Post Comments -->
+                
+                    
+                
+            </div>
+
+            <!-- Post Prev & Next Nav -->
+            <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
+    <!-- Prev Nav -->
+    
+        <a href="/2017/08/03/2017-07-03-Retrofit上传下载/" id="post_nav-newer" class="prev-content">
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_back</i>
+            </button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            新篇
+        </a>
+    
+
+    <!-- Section Spacer -->
+    <div class="section-spacer"></div>
+
+    <!-- Next Nav -->
+    
+        <a href="/2017/08/03/2017-06-26-Retrofit_Gson/" id="post_nav-older" class="next-content">
+            旧篇
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_forward</i>
+            </button>
+        </a>
+    
+</nav>
+
+        </div>
+    </div>
+
+
+
+                    
+                        <!-- Overlay For Active Sidebar -->
+<div class="sidebar-overlay"></div>
+
+<!-- Material sidebar -->
+<aside id="sidebar" class="sidebar sidebar-colored sidebar-fixed-left" role="navigation">
+    <div id="sidebar-main">
+        <!-- Sidebar Header -->
+        <div class="sidebar-header header-cover" style="background-image: url(/img/sidebar_header.png);">
+    <!-- Top bar -->
+    <div class="top-bar"></div>
+
+    <!-- Sidebar toggle button -->
+    <button type="button" class="sidebar-toggle mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" style="display: initial;" data-upgraded=",MaterialButton,MaterialRipple">
+        <i class="material-icons">clear_all</i>
+        <span class="mdl-button__ripple-container">
+            <span class="mdl-ripple">
+            </span>
+        </span>
+    </button>
+
+    <!-- Sidebar Avatar -->
+    <div class="sidebar-image">
+        <img src="/img/avatar.png" alt="ScWen7's avatar">
+    </div>
+
+    <!-- Sidebar Email -->
+    <a data-toggle="dropdown" class="sidebar-brand" href="#settings-dropdown">
+        xxh783965@gmail.com
+        <b class="caret"></b>
+    </a>
+</div>
+
+
+        <!-- Sidebar Navigation  -->
+        <ul class="nav sidebar-nav">
+    <!-- User dropdown  -->
+    <li class="dropdown">
+        <ul id="settings-dropdown" class="dropdown-menu">
+            
+                <li>
+                    <a href="mailto:xxh783965@gmail.com" target="_blank" title="Email Me">
+                        
+                            <i class="material-icons sidebar-material-icons sidebar-indent-left1pc-element">email</i>
+                        
+                        Email Me
+                    </a>
+                </li>
+            
+        </ul>
+    </li>
+
+    <!-- Homepage -->
+    
+        <li id="sidebar-first-li">
+            <a href="/">
+                
+                    <i class="material-icons sidebar-material-icons">home</i>
+                
+                主页
+            </a>
+        </li>
+        
+    
+
+    <!-- Archives  -->
+    
+        <li class="dropdown">
+            <a href="#" class="ripple-effect dropdown-toggle" data-toggle="dropdown">
+                
+                    <i class="material-icons sidebar-material-icons">inbox</i>
+                
+                    归档
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+            <li>
+                <a class="sidebar_archives-link" href="/archives/2017/08/">八月 2017<span class="sidebar_archives-count">9</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/07/">七月 2017<span class="sidebar_archives-count">1</span></a>
+            </ul>
+        </li>
+        
+    
+
+    <!-- Categories  -->
+    
+        <li class="dropdown">
+            <a href="#" class="ripple-effect dropdown-toggle" data-toggle="dropdown">
+                
+                    <i class="material-icons sidebar-material-icons">chrome_reader_mode</i>
+                
+                分类
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                
+            </ul>
+        </li>
+        
+    
+
+    <!-- Pages  -->
+    
+
+    <!-- Article Number  -->
+    
+</ul>
+
+
+        <!-- Sidebar Footer -->
+        <!--
+I'm glad you use this theme, the development is no so easy, I hope you can keep the copyright, I will thank you so much.
+If you still want to delete the copyrights, could you still retain the first one? Which namely "Theme Material"
+It will not impact the appearance and can give developers a lot of support :)
+
+很高兴您使用并喜欢该主题，开发不易 十分谢谢与希望您可以保留一下版权声明。
+如果您仍然想删除的话 能否只保留第一项呢？即 "Theme Material"
+它不会影响美观并可以给开发者很大的支持和动力。 :)
+-->
+
+<!-- Sidebar Divider -->
+
+    <div class="sidebar-divider"></div>
+
+
+<!-- Theme Material -->
+
+    <a href="https://github.com/viosey/hexo-theme-material"  class="sidebar-footer-text-a" target="_blank">
+        <div class="sidebar-text mdl-button mdl-js-button mdl-js-ripple-effect sidebar-footer-text-div" data-upgraded=",MaterialButton,MaterialRipple">
+            主题 - Material
+            <span class="sidebar-badge badge-circle">i</span>
+        </div>
+    </a>
+
+
+<!-- Help & Support -->
+<!--
+
+-->
+
+<!-- Feedback -->
+<!--
+
+-->
+
+<!-- About Theme -->
+<!--
+
+-->
+
+    </div>
+
+    <!-- Sidebar Image -->
+    
+
+</aside>
+
+                    
+
+                    
+                        <!-- Footer Top Button -->
+                        <div id="back-to-top" class="toTop-wrap">
+    <a href="#top" class="toTop">
+        <i class="material-icons footer_top-i">expand_less</i>
+    </a>
+</div>
+
+                    
+
+                    <!--Footer-->
+<footer class="mdl-mini-footer" id="bottom">
+    
+        <!-- Paradox Footer Left Section -->
+        <div class="mdl-mini-footer--left-section sns-list">
+    <!-- Twitter -->
+    
+
+    <!-- Facebook -->
+    
+
+    <!-- Google + -->
+    
+
+    <!-- Weibo -->
+    
+
+    <!-- Instagram -->
+    
+
+    <!-- Tumblr -->
+    
+
+    <!-- Github -->
+    
+        <a href="https://github.com/ScWen7" target="_blank">
+            <button class="mdl-mini-footer--social-btn social-btn footer-sns-github">
+                <span class="visuallyhidden">Github</span>
+            </button><!--
+     --></a>
+    
+
+    <!-- LinkedIn -->
+    
+
+    <!-- Zhihu -->
+    
+
+    <!-- Bilibili -->
+    
+
+    <!-- Telegram -->
+    
+</div>
+
+
+        <!--Copyright-->
+        <div id="copyright">
+            Copyright&nbsp;©<script type="text/javascript">var fd = new Date();document.write("&nbsp;" + fd.getFullYear() + "&nbsp;");</script>ScWen7's Blog
+        </div>
+
+        <!-- Paradox Footer Right Section -->
+
+        <!--
+        I am glad you use this theme, the development is no so easy, I hope you can keep the copyright.
+        It will not impact the appearance and can give developers a lot of support :)
+
+        很高兴您使用该主题，开发不易，希望您可以保留一下版权声明。
+        它不会影响美观并可以给开发者很大的支持。 :)
+        -->
+
+        <div class="mdl-mini-footer--right-section">
+            <div>
+                <div class="footer-develop-div">Powered by <a href="https://hexo.io" target="_blank" class="footer-develop-a">Hexo</a></div>
+                <div class="footer-develop-div">Theme - <a href="https://github.com/viosey/hexo-theme-material" target="_blank" class="footer-develop-a">Material</a></div>
+            </div>
+        </div>
+    
+</footer>
+
+
+                    <!-- Import File -->
+
+
+    <script>lsloader.load("js/lazyload.min.js","/js/lazyload.min.js?1BcfzuNXqV+ntF6gq+5X3Q==")</script>
+    <script>lsloader.load("js/js.min.js","/js/js.min.js?oAl/+lvaqTFV31JXTmbrNA==")</script>
+
+
+
+    <script>lsloader.load("js/nprogress.js","/js/nprogress.js?pl3Qhb9lvqR1FlyLUna1Yw==")</script>
+
+
+<script type="text/ls-javascript" id="NProgress-script">
+    NProgress.configure({
+        showSpinner: true
+    });
+    NProgress.start();
+    $('#nprogress .bar').css({
+        'background': '#29d'
+    });
+    $('#nprogress .peg').css({
+        'box-shadow': '0 0 10px #29d, 0 0 15px #29d'
+    });
+    $('#nprogress .spinner-icon').css({
+        'border-top-color': '#29d',
+        'border-left-color': '#29d'
+    });
+    setTimeout(function() {
+        NProgress.done();
+        $('.fade').removeClass('out');
+    }, 800);
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- UC Browser Compatible -->
+<script>
+	var agent = navigator.userAgent.toLowerCase();
+	if(agent.indexOf('ucbrowser')>0) {
+		document.write('<link rel="stylesheet" href="/css/uc.css">');
+	   alert('由于 UC 浏览器使用极旧的内核，而本网站使用了一些新的特性。\n为了您能更好的浏览，推荐使用 Chrome 或 Firefox 浏览器。');
+	}
+</script>
+
+<!-- Window Load-->
+<script type="text/ls-javascript" id="window-load">
+    $(window).on('load', function() {
+        // Post_Toc parent position fixed
+        $('.post-toc-wrap').parent('.mdl-menu__container').css('position', 'fixed');
+    });
+</script>
+
+<!-- MathJax Load-->
+
+<script type="text/ls-javascript" id="lazy-load">
+    // Offer LazyLoad
+    queue.offer(function(){
+        $('.lazy').lazyload({
+            effect : 'show'
+        });
+    });
+
+    // Start Queue
+    $(document).ready(function(){
+        setInterval(function(){
+            queue.execNext();
+        },200);
+    });
+</script>
+
+<!-- Bing Background -->
+
+
+<script>
+    (function(){
+        var scriptList = document.querySelectorAll('script[type="text/ls-javascript"]')
+
+        for (var i = 0; i < scriptList.length; ++i) {
+            var item = scriptList[i];
+            lsloader.runInlineScript(item.id,item.id);
+        }
+    })()
+console.log('\n %c © Material Theme | Version: 1.4.0 | https://github.com/viosey/hexo-theme-material %c \n', 'color:#455a64;background:#e0e0e0;padding:5px 0;border-top-left-radius:5px;border-bottom-left-radius:5px;', 'color:#455a64;background:#e0e0e0;padding:5px 0;border-top-right-radius:5px;border-bottom-right-radius:5px;');
+</script>
+
+                </main>
+            </div>
+        </body>
+    
+</html>
